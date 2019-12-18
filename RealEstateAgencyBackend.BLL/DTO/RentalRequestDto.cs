@@ -1,11 +1,13 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace RealEstateAgencyBackend.Models
+namespace RealEstateAgencyBackend.BLL.DTO
 {
-    public class RentalRequest
+    public class RentalRequestDto
     {
-        [Key]
         public int Id { get; set; }
 
         public String Title { get; set; }
@@ -19,7 +21,5 @@ namespace RealEstateAgencyBackend.Models
         public Int32 MaxPrice { get; set; }
 
         public String UserId { get; set; }
-
-        public virtual User User { get; set; }
     }
 }

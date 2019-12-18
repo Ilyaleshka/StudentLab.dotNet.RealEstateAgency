@@ -1,19 +1,19 @@
-﻿using RealEstateAgencyBackend.Models;
+﻿using RealEstateAgencyBackend.BLL.DTO;
 using System.Collections.Generic;
 
 namespace RealEstateAgencyBackend.BLL.Interfaces
 {
     public interface IRentalAnnouncementService
     {
-        IEnumerable<RentalAnnouncement> GetAll();
+        IEnumerable<RentalAnnouncementDto> GetAll();
 
-        RentalAnnouncement Find(int id);
+        RentalAnnouncementDto Find(int id);
 
-        RentalAnnouncement Remove(RentalAnnouncement rentalAnnouncement);
+        RentalAnnouncementDto Remove(RentalAnnouncementDto rentalAnnouncement);
 
-        void Update(RentalAnnouncement rentalAnnouncement);
+        void Update(RentalAnnouncementDto rentalAnnouncement);
 
-        void Create(RentalAnnouncement rentalAnnouncement);
+        void Create(RentalAnnouncementDto rentalAnnouncement);
 
     }
 }

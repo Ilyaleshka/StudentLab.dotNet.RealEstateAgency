@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using RealEstateAgencyBackend.BLL;
+using RealEstateAgencyBackend.BLL.DTO;
 using RealEstateAgencyBackend.BLL.Interfaces;
 using RealEstateAgencyBackend.BLL.Services;
 using RealEstateAgencyBackend.DAL.UnitOfWork;
@@ -34,7 +35,8 @@ namespace RealEstateAgencyBackend.Controllers
         [AllowAnonymous]
         public IHttpActionResult Login(LoginViewModel model)
         {
-            User user = userService.Find(model.Name, model.Password);
+            //User user = userService.Find(model.Name, model.Password);
+            UserDto user = userService.Find(model.Name, model.Password);
 
             if (user == null)
             {
@@ -80,7 +82,8 @@ namespace RealEstateAgencyBackend.Controllers
                 return BadRequest(errorResponce);
             }
 
-            User user = new User { UserName = model.Name, Email = model.Email,UserLastName = model.LastName };
+            //User user = new User { UserName = model.Name, Email = model.Email,UserLastName = model.LastName };
+            UserDto user = new UserDto { UserName = model.Name, Email = model.Email,UserLastName = model.LastName };
             IdentityResult result = userService.Create(user, model.Password);
 
             if (result.Succeeded)
@@ -89,6 +92,7 @@ namespace RealEstateAgencyBackend.Controllers
             }
             else
             {
+
                 return BadRequest(result.Errors.FirstOrDefault());
             }
         }

@@ -6,48 +6,74 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RealEstateAgencyBackend.BLL.DTO;
+using AutoMapper;
 
 namespace RealEstateAgencyBackend.BLL.Services
 {
     public class RentalRequestService : IRentalRequestService
     {
-        private IUnitOfWork Dal;
-        private IRentalRequestRepository repository;
+        private IUnitOfWork _dal;
+        private IRentalRequestRepository _repository;
 
         public RentalRequestService(IUnitOfWork dal = null)
         {
-            Dal = dal;
-            repository = Dal.RentalRequestRepository;
+            this._dal = dal;
+            _repository = this._dal.RentalRequestRepository;
         }
 
-        public RentalRequest Find(int id)
+        public void Create(RentalRequestDto rentalRequestDto)
         {
-            return repository.Find(id);
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequestDto, RentalRequest>());
+            var mapper = config.CreateMapper();
+            RentalRequest rentalRequest = mapper.Map<RentalRequest>(rentalRequestDto);
+
+            _repository.Create(rentalRequest);
+            _dal.Save();
         }
 
-        public IEnumerable<RentalRequest> GetAll()
+        public RentalRequestDto Find(int id)
         {
-            return repository.GetAll();
+            RentalRequest rentalRequest = _repository.Find(id);
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequest, RentalRequestDto>());
+            var mapper = config.CreateMapper();
+            RentalRequestDto rentalRequestDto = mapper.Map<RentalRequestDto>(rentalRequest);
+
+            return rentalRequestDto;
         }
 
-
-        public void Create(RentalRequest rentalRequest)
+        public IEnumerable<RentalRequestDto> GetAll()
         {
-            repository.Create(rentalRequest);
-            Dal.Save();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequest, RentalRequestDto>());
+            var mapper = config.CreateMapper();
+            List<RentalRequestDto> rentalRequestDtos = mapper.Map<IEnumerable<RentalRequest>, List<RentalRequestDto>>(_repository.GetAll());
+
+            return rentalRequestDtos;
         }
 
-        public RentalRequest Remove(RentalRequest rentalRequest)
+        public RentalRequestDto Remove(RentalRequestDto rentalRequest)
         {
-            var temp = repository.Remove(rentalRequest.Id);
-            Dal.Save();
-            return temp;
+            var temp = _repository.Remove(rentalRequest.Id);
+            _dal.Save();
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequest, RentalRequestDto>());
+            var mapper = config.CreateMapper();
+            RentalRequestDto rentalRequestDto = mapper.Map<RentalRequestDto>(temp);
+
+            return rentalRequestDto;
         }
 
-        public void Update(RentalRequest rentalRequest)
+        public void Update(RentalRequestDto rentalRequestDto)
         {
-            repository.Update(rentalRequest);
-            Dal.Save();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequestDto, RentalRequest>());
+            var mapper = config.CreateMapper();
+            RentalRequest rentalRequest = mapper.Map<RentalRequest>(rentalRequestDto);
+
+            _repository.Update(rentalRequest);
+            _dal.Save();
         }
+
     }
 }

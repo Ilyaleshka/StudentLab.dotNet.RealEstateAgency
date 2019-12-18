@@ -6,7 +6,7 @@ namespace RealEstateAgencyBackend.DAL.UnitOfWork
 
     public class UnitOfWork : IUnitOfWork
     {
-        private AppDbContext dbContext;
+        private AppDbContext _dbContext;
 
         private RentalRequestRepository _rentalRequestRepository;
         private RentalAnnouncementRepository _rentalAnnouncementRepository;
@@ -14,7 +14,7 @@ namespace RealEstateAgencyBackend.DAL.UnitOfWork
 
         public UnitOfWork(AppDbContext context)
         {
-            dbContext = context;
+            _dbContext = context;
         }
 
         public IRentalRequestRepository RentalRequestRepository
@@ -22,7 +22,7 @@ namespace RealEstateAgencyBackend.DAL.UnitOfWork
             get
             {
                 if (_rentalRequestRepository == null)
-                    _rentalRequestRepository = new RentalRequestRepository(dbContext);
+                    _rentalRequestRepository = new RentalRequestRepository(_dbContext);
                 return _rentalRequestRepository;
             }
         }
@@ -31,7 +31,7 @@ namespace RealEstateAgencyBackend.DAL.UnitOfWork
             get
             {
                 if (_rentalAnnouncementRepository == null)
-                    _rentalAnnouncementRepository = new RentalAnnouncementRepository(dbContext);
+                    _rentalAnnouncementRepository = new RentalAnnouncementRepository(_dbContext);
                 return _rentalAnnouncementRepository;
             }
         }
@@ -40,14 +40,14 @@ namespace RealEstateAgencyBackend.DAL.UnitOfWork
             get
             {
                 if (_userRepository == null)
-                    _userRepository = new UserRepository(dbContext);//
+                    _userRepository = new UserRepository(_dbContext);//
                 return _userRepository;
             }
         }
 
         public void Save()
         {
-            dbContext.SaveChanges();
+            _dbContext.SaveChanges();
         }
     }
 }

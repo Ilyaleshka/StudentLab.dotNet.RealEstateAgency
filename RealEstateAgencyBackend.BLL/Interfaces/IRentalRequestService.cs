@@ -1,4 +1,4 @@
-﻿using RealEstateAgencyBackend.Models;
+﻿using RealEstateAgencyBackend.BLL.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +9,15 @@ namespace RealEstateAgencyBackend.BLL.Interfaces
 {
     public interface IRentalRequestService
     {
-        IEnumerable<RentalRequest> GetAll();
-        RentalRequest Find(int id);
+        IEnumerable<RentalRequestDto> GetAll();
 
-        RentalRequest Remove(RentalRequest rentalAnnouncement);
+        RentalRequestDto Find(int id);
 
-        void Update(RentalRequest rentalAnnouncement);
+        RentalRequestDto Remove(RentalRequestDto rentalAnnouncement);
 
-        void Create(RentalRequest rentalAnnouncement);
+        void Update(RentalRequestDto rentalAnnouncement);
+
+        void Create(RentalRequestDto rentalAnnouncement);
 
     }
 }

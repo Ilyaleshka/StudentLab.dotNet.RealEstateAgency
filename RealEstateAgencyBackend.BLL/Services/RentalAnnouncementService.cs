@@ -1,4 +1,6 @@
-﻿using RealEstateAgencyBackend.BLL.Interfaces;
+﻿using AutoMapper;
+using RealEstateAgencyBackend.BLL.DTO;
+using RealEstateAgencyBackend.BLL.Interfaces;
 using RealEstateAgencyBackend.DAL.Repositories;
 using RealEstateAgencyBackend.DAL.UnitOfWork;
 using RealEstateAgencyBackend.Models;
@@ -8,42 +10,68 @@ namespace RealEstateAgencyBackend.BLL.Services
 {
     public class RentalAnnouncementService : IRentalAnnouncementService
     {
-        private IUnitOfWork Dal;
-        private IRentalAnnouncementRepository repository;
+        private IUnitOfWork _dal;
+        private IRentalAnnouncementRepository _repository;
 
-        public RentalAnnouncementService(IUnitOfWork dal = null)
+        public RentalAnnouncementService(IUnitOfWork dal)
         {
-            Dal = dal;
-            repository = Dal.RentalAnnouncementRepository;
+            _dal = dal;
+            _repository = _dal.RentalAnnouncementRepository;
         }
 
-        public void Create(RentalAnnouncement rentalAnnouncement)
+        public void Create(RentalAnnouncementDto rentalAnnouncementDto)
         {
-            repository.Create(rentalAnnouncement);
-            Dal.Save();
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalAnnouncementDto, RentalAnnouncement>());
+            var mapper = config.CreateMapper();
+            RentalAnnouncement rentalAnnouncement = mapper.Map<RentalAnnouncement>(rentalAnnouncementDto);
+
+            _repository.Create(rentalAnnouncement);
+            _dal.Save();
         }
 
-        public RentalAnnouncement Find(int id)
+        public RentalAnnouncementDto Find(int id)
         {
-            return repository.Find(id);
+            RentalAnnouncement rentalAnnouncement = _repository.Find(id);
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalAnnouncement, RentalAnnouncementDto>());
+            var mapper = config.CreateMapper();
+            RentalAnnouncementDto rentalAnnouncementDto = mapper.Map<RentalAnnouncementDto>(rentalAnnouncement);
+
+            return rentalAnnouncementDto;
         }
 
-        public IEnumerable<RentalAnnouncement> GetAll()
+        public IEnumerable<RentalAnnouncementDto> GetAll()
         {
-            return repository.GetAll();
+            //IEnumerable<RentalAnnouncement> rentalAnnouncements = _repository.GetAll();
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalAnnouncement, RentalAnnouncementDto>());
+            var mapper = config.CreateMapper();
+            List<RentalAnnouncementDto> rentalAnnouncementDtos = mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementDto>>(_repository.GetAll());
+
+            return rentalAnnouncementDtos;
         }
 
-        public RentalAnnouncement Remove(RentalAnnouncement rentalAnnouncement)
+        public RentalAnnouncementDto Remove(RentalAnnouncementDto rentalAnnouncement)
         {
-            var temp =  repository.Remove(rentalAnnouncement.Id);
-            Dal.Save();
-            return temp;
+            var temp =  _repository.Remove(rentalAnnouncement.Id);
+            _dal.Save();
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalAnnouncement, RentalAnnouncementDto>());
+            var mapper = config.CreateMapper();
+            RentalAnnouncementDto rentalAnnouncementDto = mapper.Map<RentalAnnouncementDto>(temp);
+
+            return rentalAnnouncementDto;
         }
 
-        public void Update(RentalAnnouncement rentalAnnouncement)
+        public void Update(RentalAnnouncementDto rentalAnnouncementDto)
         {
-            repository.Update(rentalAnnouncement);
-            Dal.Save();
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalAnnouncementDto, RentalAnnouncement>());
+            var mapper = config.CreateMapper();
+            RentalAnnouncement rentalAnnouncement = mapper.Map<RentalAnnouncement>(rentalAnnouncementDto);
+
+            _repository.Update(rentalAnnouncement);
+            _dal.Save();
         }
 
         //RentalAnnouncement rentalAnnouncement = db.RentalAnnouncements.Find(id);

@@ -15,10 +15,13 @@ namespace RealEstateAgencyBackend.Models
 
         public virtual ICollection<RentalRequest> RentalRequests { get; set; }
 
+        public virtual ICollection<Reservation> Reservations { get; set; }
+
         public User()
         {
             RentalAnnouncements = new List<RentalAnnouncement>();
             RentalRequests = new List<RentalRequest>();
+            Reservations = new List<Reservation>();
         }
     }
 }
