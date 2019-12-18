@@ -19,5 +19,7 @@ namespace RealEstateAgencyBackend.Models
         public Int32 MaxPrice { get; set; }
 
         public String UserId { get; set; }
+
+        public User User { get; set; }
     }
 }

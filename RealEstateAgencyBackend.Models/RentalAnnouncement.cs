@@ -21,5 +21,7 @@ namespace RealEstateAgencyBackend.Models
         public String Location { get; set; }
 
         public String UserId { get; set; }
+
+        public User User { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 
         public UserService(IUnitOfWork dal)
         {
-            Dal = new UnitOfWork();
+            Dal = dal;
             userManager = new UserManager<User>(Dal.UserRepository);
             userManager.PasswordValidator = new PasswordValidator
             {

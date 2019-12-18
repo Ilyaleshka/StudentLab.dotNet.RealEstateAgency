@@ -22,7 +22,7 @@ namespace RealEstateAgencyBackend.DAL.Contexts
         }
     }
 
-    public class IdentityDbInit : DropCreateDatabaseAlways<AppDbContext>//DropCreateDatabaseIfModelChanges<AppDbContext>
+    public class IdentityDbInit : DropCreateDatabaseIfModelChanges<AppDbContext>//DropCreateDatabaseIfModelChanges<AppDbContext>
     {
         protected override void Seed(AppDbContext context)
         {

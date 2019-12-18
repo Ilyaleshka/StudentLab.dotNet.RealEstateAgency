@@ -23,27 +23,29 @@ namespace RealEstateAgencyBackend.Controllers
     {
         IUserService userService;
 
-        public AccountController()
+        public AccountController(IUserService service)
         {
-            userService = new UserService(new UnitOfWork());
+            userService = service;
         }
 
+
+        [Route("api/account/login")]
         [HttpPost]
         [AllowAnonymous]
         public IHttpActionResult Login(LoginViewModel model)
         {
             User user = userService.Find(model.Name, model.Password);
-            //User user = UserManager.Find(model.Name, model.Password);
 
             if (user == null)
             {
-                ModelState.AddModelError("", "Некорректное имя или пароль.");
+                String errorResponce = String.Empty;
+                errorResponce = string.Join(";\n", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+                errorResponce = string.Join(";\n", errorResponce, "Incorrect login or password");
+                return BadRequest(errorResponce);
             }
             else
             {
-                //ClaimsIdentity ident = UserManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                ClaimsIdentity ident = userService.CreateIdentity(user,DefaultAuthenticationTypes.ApplicationCookie);
-
+                ClaimsIdentity ident = userService.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
 
                 AuthManager.SignOut();
                 AuthManager.SignIn(new AuthenticationProperties
@@ -52,10 +54,46 @@ namespace RealEstateAgencyBackend.Controllers
                 }, ident);
             }
 
-            return Ok(ModelState);
+            return Ok(new ResponceModel() {Id = user.Id, Name = user.UserName,LastName = user.UserLastName, Email=user.Email });
         }
 
-        
+        [Route("api/account/logout")]
+        [HttpPost]
+        [AllowAnonymous]
+        public IHttpActionResult Logout()
+        {
+            if (AuthManager.User != null)            
+                AuthManager.SignOut();
+            return Ok(); 
+        }
+
+
+        [Route("api/account/register")]
+        [HttpPost]
+        [AllowAnonymous]
+        public IHttpActionResult Register(CreateModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                String errorResponce = String.Empty;
+                errorResponce = string.Join(";\n", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+                return BadRequest(errorResponce);
+            }
+
+            User user = new User { UserName = model.Name, Email = model.Email,UserLastName = model.LastName };
+            IdentityResult result = userService.Create(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                return Created("api/account/register", model);
+            }
+            else
+            {
+                return BadRequest(result.Errors.FirstOrDefault());
+            }
+        }
+
+
         private IAuthenticationManager AuthManager
         {
             get
@@ -64,13 +102,13 @@ namespace RealEstateAgencyBackend.Controllers
             }
         }
 
-        /*
-        private AppUserManager UserManager
+        private void AddErrorsFromResult(IdentityResult result)
         {
-            get
+            foreach (string error in result.Errors)
             {
-                return HttpContext.Current.GetOwinContext().GetUserManager<AppUserManager>();
+                ModelState.AddModelError("", error);
             }
-        }*/
+        }
+
     }
 }

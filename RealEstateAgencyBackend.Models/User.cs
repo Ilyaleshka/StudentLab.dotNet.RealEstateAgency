@@ -10,5 +10,15 @@ namespace RealEstateAgencyBackend.Models
     public class User : IdentityUser
     {
         public String UserLastName { get; set; }
+
+        public virtual ICollection<RentalAnnouncement> RentalAnnouncements { get; set; }
+
+        public virtual ICollection<RentalRequest> RentalRequests { get; set; }
+
+        public User()
+        {
+            RentalAnnouncements = new List<RentalAnnouncement>();
+            RentalRequests = new List<RentalRequest>();
+        }
     }
 }

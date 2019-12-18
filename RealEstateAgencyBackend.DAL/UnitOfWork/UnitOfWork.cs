@@ -12,9 +12,9 @@ namespace RealEstateAgencyBackend.DAL.UnitOfWork
         private RentalAnnouncementRepository _rentalAnnouncementRepository;
         private UserRepository _userRepository;
 
-        public UnitOfWork(AppDbContext context = null)
+        public UnitOfWork(AppDbContext context)
         {
-            dbContext = new AppDbContext();
+            dbContext = context;
         }
 
         public IRentalRequestRepository RentalRequestRepository

@@ -8,6 +8,8 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Data.Entity;
 using RealEstateAgencyBackend.Models;
+using Ninject.Modules;
+using Ninject;
 
 namespace RealEstateAgencyBackend
 {
@@ -15,10 +17,6 @@ namespace RealEstateAgencyBackend
     {
         protected void Application_Start()
         {
-            //Database.SetInitializer(new DbUserInitializer());
-            //Database.SetInitializer(new DbAnnouncementInitializer());
-            //Database.SetInitializer(new DbRequestInitializer());
-
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

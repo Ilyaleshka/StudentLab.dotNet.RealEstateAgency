@@ -13,7 +13,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 
         public RentalAnnouncementService(IUnitOfWork dal = null)
         {
-            Dal = new UnitOfWork();
+            Dal = dal;
             repository = Dal.RentalAnnouncementRepository;
         }
 

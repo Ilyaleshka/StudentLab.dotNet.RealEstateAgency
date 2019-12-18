@@ -16,7 +16,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 
         public RentalRequestService(IUnitOfWork dal = null)
         {
-            Dal = new UnitOfWork();
+            Dal = dal;
             repository = Dal.RentalRequestRepository;
         }
 
