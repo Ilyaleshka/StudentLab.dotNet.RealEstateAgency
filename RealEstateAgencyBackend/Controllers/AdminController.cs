@@ -32,9 +32,7 @@ namespace RealEstateAgencyBackend.Controllers
         {
             get  
             {
-             //HttpContext.Current.GetOwinContext
                 return HttpContext.Current.GetOwinContext().GetUserManager<AppUserManager>();
-
             }
         }
 

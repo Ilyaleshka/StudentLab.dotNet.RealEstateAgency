@@ -35,7 +35,6 @@ namespace RealEstateAgencyBackend.Controllers
         [AllowAnonymous]
         public IHttpActionResult Login(LoginViewModel model)
         {
-            //User user = userService.Find(model.Name, model.Password);
             UserDto user = userService.Find(model.Name, model.Password);
 
             if (user == null)
@@ -47,7 +46,7 @@ namespace RealEstateAgencyBackend.Controllers
             }
             else
             {
-                ClaimsIdentity ident = userService.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                ClaimsIdentity ident = userService.CreateIdentity(model.Name, model.Password, DefaultAuthenticationTypes.ApplicationCookie);
 
                 AuthManager.SignOut();
                 AuthManager.SignIn(new AuthenticationProperties
@@ -83,8 +82,8 @@ namespace RealEstateAgencyBackend.Controllers
             }
 
             //User user = new User { UserName = model.Name, Email = model.Email,UserLastName = model.LastName };
-            UserDto user = new UserDto { UserName = model.Name, Email = model.Email,UserLastName = model.LastName };
-            IdentityResult result = userService.Create(user, model.Password);
+            CreateUserDto user = new CreateUserDto { UserName = model.Name, Email = model.Email, UserLastName = model.LastName, Password = model.Password };
+            IdentityResult result = userService.Create(user);
 
             if (result.Succeeded)
             {

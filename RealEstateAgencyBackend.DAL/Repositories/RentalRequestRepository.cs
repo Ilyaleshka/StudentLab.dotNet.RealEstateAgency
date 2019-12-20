@@ -38,7 +38,7 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             return _context.RentalRequests;
         }
 
-        public IEnumerable<RentalRequest> GetByUserId(string userID)
+        public IEnumerable<RentalRequest> FindByUserId(string userID)
         {
             return _context.RentalRequests.Where(request => request.UserId == userID);
         }

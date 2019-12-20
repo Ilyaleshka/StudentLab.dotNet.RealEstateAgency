@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateAgencyBackend.Models
@@ -23,5 +24,7 @@ namespace RealEstateAgencyBackend.Models
         public String UserId { get; set; }
 
         public virtual User User { get; set; }
+
+        public virtual ICollection<Reservation> Reservations { get; set; }
     }
 }

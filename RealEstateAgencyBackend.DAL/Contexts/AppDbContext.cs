@@ -8,6 +8,7 @@ namespace RealEstateAgencyBackend.DAL.Contexts
     {
         public DbSet<RentalAnnouncement> RentalAnnouncements { get; set; }
         public DbSet<RentalRequest> RentalRequests { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
 
         public AppDbContext() : base("name=IdentityDb") { }
 
@@ -22,7 +23,7 @@ namespace RealEstateAgencyBackend.DAL.Contexts
         }
     }
 
-    public class IdentityDbInit : DropCreateDatabaseIfModelChanges<AppDbContext>//DropCreateDatabaseIfModelChanges<AppDbContext>
+    public class IdentityDbInit : DropCreateDatabaseAlways<AppDbContext>//DropCreateDatabaseIfModelChanges<AppDbContext>
     {
         protected override void Seed(AppDbContext context)
         {
@@ -35,6 +36,7 @@ namespace RealEstateAgencyBackend.DAL.Contexts
             PerformInitialSetup(context);
             base.Seed(context);
         }
+
         public void PerformInitialSetup(AppDbContext context)
         {
             

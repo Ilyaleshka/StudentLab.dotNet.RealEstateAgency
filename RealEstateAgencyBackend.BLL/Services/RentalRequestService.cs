@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RealEstateAgencyBackend.BLL.DTO;
 using AutoMapper;
+using Microsoft.AspNet.Identity;
 
 namespace RealEstateAgencyBackend.BLL.Services
 {
@@ -16,10 +17,14 @@ namespace RealEstateAgencyBackend.BLL.Services
         private IUnitOfWork _dal;
         private IRentalRequestRepository _repository;
 
+        private UserManager<User> _userManager;
+
         public RentalRequestService(IUnitOfWork dal = null)
         {
             this._dal = dal;
             _repository = this._dal.RentalRequestRepository;
+
+            _userManager = new UserManager<User>(_dal.UserRepository);
         }
 
         public void Create(RentalRequestDto rentalRequestDto)
@@ -28,6 +33,9 @@ namespace RealEstateAgencyBackend.BLL.Services
             var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequestDto, RentalRequest>());
             var mapper = config.CreateMapper();
             RentalRequest rentalRequest = mapper.Map<RentalRequest>(rentalRequestDto);
+
+            User user = _userManager.FindById(rentalRequestDto.UserId);
+            rentalRequest.User = user;
 
             _repository.Create(rentalRequest);
             _dal.Save();

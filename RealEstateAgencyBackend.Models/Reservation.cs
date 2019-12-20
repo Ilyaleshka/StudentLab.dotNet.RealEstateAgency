@@ -11,16 +11,21 @@ namespace RealEstateAgencyBackend.Models
     public class Reservation
     {
         [Key]
-        [ForeignKey("RentalAnnouncement")]
         public int Id { get; set; }
 
         public bool IsConfirmed { get; set; }
 
+        public bool IsActive { get; set; }
+
+        public DateTime? EndTime { get; set; }
+
         public DateTime ReservationTime { get; set; }
+
+        public int RentalAnnouncementId { get; set; }
 
         public virtual RentalAnnouncement RentalAnnouncement { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public virtual User User { get; set; }
 

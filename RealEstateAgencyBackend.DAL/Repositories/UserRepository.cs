@@ -3,6 +3,7 @@ using RealEstateAgencyBackend.DAL.Contexts;
 using RealEstateAgencyBackend.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,28 +22,30 @@ namespace RealEstateAgencyBackend.DAL.Repositories
 
         public void Create(User item)
         {
-            throw new NotImplementedException();
+            CreateAsync(item);
         }
-
 
         public User Find(string id)
         {
-            throw new NotImplementedException();
+            return _context.Users.Find(id);
         }
 
         public IEnumerable<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Users;
         }
 
         public User Remove(string id)
         {
-            throw new NotImplementedException();
+            User user = _context.Users.Find(id);
+            if(user != null)
+                user = _context.Users.Remove(user);
+            return user;
         }
 
         public void Update(User item)
         {
-            throw new NotImplementedException();
+            _context.Entry(item).State = EntityState.Modified;
         }
 
     }

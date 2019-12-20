@@ -6,5 +6,6 @@ using RealEstateAgencyBackend.Models;
 namespace RealEstateAgencyBackend.DAL.Repositories
 {
     public interface IUserRepository : IRepository<string, User>, IUserStore<User>
-    { }
+    {
+    }
 }

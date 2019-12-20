@@ -16,4 +16,15 @@ namespace RealEstateAgencyBackend.BLL.DTO
 
         public String Id { get; set; }
     }
+
+    public class CreateUserDto
+    {
+        public String UserLastName { get; set; }
+
+        public String UserName { get; set; }
+
+        public String Email { get; set; }
+
+        public String Password { get; set; }
+    }
 }

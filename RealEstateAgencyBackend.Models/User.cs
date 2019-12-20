@@ -21,7 +21,7 @@ namespace RealEstateAgencyBackend.Models
         {
             RentalAnnouncements = new List<RentalAnnouncement>();
             RentalRequests = new List<RentalRequest>();
-            Reservations = new List<Reservation>();
+            Reservations = new List<Reservation>(); 
         }
     }
 }

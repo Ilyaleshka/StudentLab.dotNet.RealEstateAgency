@@ -15,7 +15,7 @@ using RealEstateAgencyBackend.Models;
 namespace RealEstateAgencyBackend.Controllers
 {
     [EnableCors(  "*",  "*", "*")]
-    public class RentalAnnouncementsController : ApiController
+    public class AnnouncementsController : ApiController
     {
         private AppDbContext db = new AppDbContext();
 

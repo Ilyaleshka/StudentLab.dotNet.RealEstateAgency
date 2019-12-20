@@ -14,6 +14,5 @@ namespace RealEstateAgencyBackend.BLL.Interfaces
         void Update(RentalAnnouncementDto rentalAnnouncement);
 
         void Create(RentalAnnouncementDto rentalAnnouncement);
-
     }
 }

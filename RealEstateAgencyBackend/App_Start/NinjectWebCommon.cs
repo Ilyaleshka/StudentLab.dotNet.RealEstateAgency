@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+﻿using AutoMapper;
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
 using Ninject.Modules;
 using Ninject.Web.Common;
@@ -48,7 +49,12 @@ namespace RealEstateAgencyBackend
             kernel.Bind<AppDbContext>().To<AppDbContext>().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
             kernel.Bind<IUserService>().To<UserService>().InRequestScope();
-            //kernel.Bind<IRepo>().ToMethod(ctx => new Repo("Ninject Rocks!"));
+            kernel.Bind<IRentalRequestService>().To<RentalRequestService>().InRequestScope();
+
+            var mapperConfiguration = MapperConfig.CreateConfiguration();
+            kernel.Bind<MapperConfiguration>().ToConstant(mapperConfiguration).InSingletonScope();
+            kernel.Bind<IMapper>().ToMethod(ctx =>
+                 new Mapper(mapperConfiguration, type => ctx.Kernel.Get(type)));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using RealEstateAgencyBackend.DAL.Contexts;
 using RealEstateAgencyBackend.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -22,10 +23,16 @@ namespace RealEstateAgencyBackend.DAL.Repositories
 
         public RentalAnnouncement Remove(int id)
         {
-            RentalAnnouncement request = _context.RentalAnnouncements.Find(id);
-            if (request != null)
-                request = _context.RentalAnnouncements.Remove(request);
-            return request;
+            RentalAnnouncement announcement = _context.RentalAnnouncements.Find(id);
+            if (announcement != null)
+            {
+                if (announcement.Reservations != null)
+                {
+                    _context.Reservations.RemoveRange(announcement.Reservations);
+                }
+                announcement = _context.RentalAnnouncements.Remove(announcement);
+            }
+            return announcement;
         }
 
         public RentalAnnouncement Find(int id)
@@ -35,12 +42,12 @@ namespace RealEstateAgencyBackend.DAL.Repositories
 
         public IEnumerable<RentalAnnouncement> GetAll()
         {
-            return _context.RentalAnnouncements;
+            return _context.RentalAnnouncements.Where(announcement => announcement.Reservations.Any(reservation => reservation.IsActive));
         }
 
-        public IEnumerable<RentalAnnouncement> GetByUserId(string userID)
+        public IEnumerable<RentalAnnouncement> FindByUserId(string userID)
         {
-            return _context.RentalAnnouncements.Where(request => request.UserId == userID);
+            return _context.RentalAnnouncements.Where(announcement => announcement.UserId == userID);
         }
 
         public void Update(RentalAnnouncement item)

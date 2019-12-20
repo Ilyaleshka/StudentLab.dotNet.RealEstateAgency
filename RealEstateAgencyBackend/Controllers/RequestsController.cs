@@ -9,15 +9,38 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using RealEstateAgencyBackend.BLL.Interfaces;
 using RealEstateAgencyBackend.DAL.Contexts;
 using RealEstateAgencyBackend.Models;
 
 namespace RealEstateAgencyBackend.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class RentalRequestsController : ApiController
+    public class RequestsController : ApiController
     {
         private AppDbContext db = new AppDbContext();
+
+        IRentalRequestService userService;
+
+        public RequestsController(IRentalRequestService service)
+        {
+            userService = service;
+        }
+
+        // POST: api/RentalRequests
+        [Route("api/requests/create")]
+        [HttpPost]
+        public IHttpActionResult CreateRequest(RentalRequestCreateViewModel rentalRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+                    
+            return Created("",rentalRequest);
+        }
+
 
         // GET: api/RentalRequests
         public IQueryable<RentalRequest> GetRentalRequests()

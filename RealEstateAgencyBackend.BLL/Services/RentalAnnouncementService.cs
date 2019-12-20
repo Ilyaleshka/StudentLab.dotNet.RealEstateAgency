@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using RealEstateAgencyBackend.BLL.DTO;
 using RealEstateAgencyBackend.BLL.Interfaces;
 using RealEstateAgencyBackend.DAL.Repositories;
@@ -13,10 +14,14 @@ namespace RealEstateAgencyBackend.BLL.Services
         private IUnitOfWork _dal;
         private IRentalAnnouncementRepository _repository;
 
+        private UserManager<User> _userManager;
+
         public RentalAnnouncementService(IUnitOfWork dal)
         {
             _dal = dal;
             _repository = _dal.RentalAnnouncementRepository;
+
+            _userManager = new UserManager<User>(_dal.UserRepository);
         }
 
         public void Create(RentalAnnouncementDto rentalAnnouncementDto)
@@ -25,6 +30,9 @@ namespace RealEstateAgencyBackend.BLL.Services
             var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalAnnouncementDto, RentalAnnouncement>());
             var mapper = config.CreateMapper();
             RentalAnnouncement rentalAnnouncement = mapper.Map<RentalAnnouncement>(rentalAnnouncementDto);
+
+            User user = _userManager.FindById(rentalAnnouncementDto.UserId);
+            rentalAnnouncement.User = user;
 
             _repository.Create(rentalAnnouncement);
             _dal.Save();

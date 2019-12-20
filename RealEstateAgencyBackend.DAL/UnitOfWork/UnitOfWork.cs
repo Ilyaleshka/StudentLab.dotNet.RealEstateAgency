@@ -11,6 +11,7 @@ namespace RealEstateAgencyBackend.DAL.UnitOfWork
         private RentalRequestRepository _rentalRequestRepository;
         private RentalAnnouncementRepository _rentalAnnouncementRepository;
         private UserRepository _userRepository;
+        private ReservationRepository _reservationRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -42,6 +43,16 @@ namespace RealEstateAgencyBackend.DAL.UnitOfWork
                 if (_userRepository == null)
                     _userRepository = new UserRepository(_dbContext);//
                 return _userRepository;
+            }
+        }
+
+        public IReservationRepository ReservationRepository
+        {
+            get
+            {
+                if (_reservationRepository == null)
+                    _reservationRepository = new ReservationRepository(_dbContext);//
+                return _reservationRepository;
             }
         }
 
