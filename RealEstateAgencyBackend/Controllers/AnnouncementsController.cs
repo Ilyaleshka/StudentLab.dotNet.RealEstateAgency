@@ -6,9 +6,14 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using AutoMapper;
+using Microsoft.Owin.Security;
+using RealEstateAgencyBackend.BLL.DTO;
+using RealEstateAgencyBackend.BLL.Interfaces;
 using RealEstateAgencyBackend.DAL.Contexts;
 using RealEstateAgencyBackend.Models;
 
@@ -17,27 +22,63 @@ namespace RealEstateAgencyBackend.Controllers
     [EnableCors(  "*",  "*", "*")]
     public class AnnouncementsController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        private IMapper _mapper;
+        private IRentalAnnouncementService _rentalAnnouncementService;
+        private IUserService _userService;
 
-        // GET: api/RentalAnnouncements
-        public IQueryable<RentalAnnouncement> GetRentalAnnouncements()
+        public AnnouncementsController(IRentalAnnouncementService rentalAnnouncementService, IUserService userService, IMapper mapper)
         {
-            return db.RentalAnnouncements;
+            _rentalAnnouncementService = rentalAnnouncementService;
+            _userService = userService;
+            _mapper = mapper;
         }
 
-        // GET: api/RentalAnnouncements/5
-        [ResponseType(typeof(RentalAnnouncement))]
+        [HttpGet]
+        [Route("api/announcements")]
+        public IEnumerable<RentalAnnouncementViewModel> GetRentalAnnouncements()
+        {
+            var announcements = _rentalAnnouncementService.GetAll();
+            IEnumerable<RentalAnnouncementViewModel> results = _mapper.Map<IEnumerable<RentalAnnouncementDto>, IEnumerable<RentalAnnouncementViewModel>>(announcements);
+            return results;
+        }
+
+        [HttpGet]
+        [Route("api/announcements/{id}")]
+        [ResponseType(typeof(RentalAnnouncementViewModel))]
         public IHttpActionResult GetRentalAnnouncement(int id)
         {
-            RentalAnnouncement rentalAnnouncement = db.RentalAnnouncements.Find(id);
-            if (rentalAnnouncement == null)
-            {
-                return NotFound();
-            }
+            RentalAnnouncementDto rentalAnnouncement = _rentalAnnouncementService.Find(id);
 
-            return Ok(rentalAnnouncement);
+            if (rentalAnnouncement == null)
+                return NotFound();
+
+            RentalAnnouncementViewModel view = _mapper.Map<RentalAnnouncementViewModel>(rentalAnnouncement);
+
+            return Ok(view);
         }
 
+        [Authorize]
+        [Route("api/announcements/create")]
+        [HttpPost]
+        [ResponseType(typeof(RentalAnnouncementCreateModel))]
+        public IHttpActionResult CreateRentalAnnouncement(RentalAnnouncementCreateModel rentalAnnouncementCreateModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            String userName = AuthManager.User.Identity.Name;
+            String userId = _userService.GetUserId(userName);
+
+            RentalAnnouncementDto rentalAnnouncement = _mapper.Map<RentalAnnouncementDto>(rentalAnnouncementCreateModel);//RentalAnnouncementCreateModel
+            rentalAnnouncement.UserId = userId;
+            _rentalAnnouncementService.Create(rentalAnnouncement);
+
+            return Created("", rentalAnnouncementCreateModel);
+        }
+
+        /*
         // PUT: api/RentalAnnouncements/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutRentalAnnouncement(int id, RentalAnnouncement rentalAnnouncement)
@@ -72,22 +113,9 @@ namespace RealEstateAgencyBackend.Controllers
 
             return StatusCode(HttpStatusCode.NoContent);
         }
+        */
 
-        // POST: api/RentalAnnouncements
-        [ResponseType(typeof(RentalAnnouncement))]
-        public IHttpActionResult PostRentalAnnouncement(RentalAnnouncement rentalAnnouncement)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.RentalAnnouncements.Add(rentalAnnouncement);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = rentalAnnouncement.Id }, rentalAnnouncement);
-        }
-
+            /*
         // DELETE: api/RentalAnnouncements/5
         [ResponseType(typeof(RentalAnnouncement))]
         public IHttpActionResult DeleteRentalAnnouncement(int id)
@@ -103,19 +131,14 @@ namespace RealEstateAgencyBackend.Controllers
 
             return Ok(rentalAnnouncement);
         }
+        */
 
-        protected override void Dispose(bool disposing)
+        private IAuthenticationManager AuthManager
         {
-            if (disposing)
+            get
             {
-                db.Dispose();
+                return HttpContext.Current.GetOwinContext().Authentication;
             }
-            base.Dispose(disposing);
-        }
-
-        private bool RentalAnnouncementExists(int id)
-        {
-            return db.RentalAnnouncements.Count(e => e.Id == id) > 0;
         }
     }
 }

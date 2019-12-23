@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin.Security;
+using RealEstateAgencyBackend.BLL.DTO;
 using RealEstateAgencyBackend.BLL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,19 +14,23 @@ namespace RealEstateAgencyBackend.Controllers
     [Authorize]
     public class UserController : ApiController
     {
-        IUserService userService;
+        private IUserService _userService;
 
         public UserController(IUserService service)
         {
-            userService = service;
+            _userService = service;
         }
 
         [Route("api/profile/announcements")]
         [HttpPost]
         public IHttpActionResult Announcements()
         {
-
-            return Ok();
+            String userName = AuthManager.User.Identity.Name;
+            String userId = _userService.GetUserId(userName);
+            IEnumerable<RentalAnnouncementDto> rentalAnnouncements = null;
+            if (userId != null)
+                rentalAnnouncements = _userService.GetRentalAnnouncements(userId);
+            return Ok(rentalAnnouncements);
         }
 
         [Route("api/profile/requests")]

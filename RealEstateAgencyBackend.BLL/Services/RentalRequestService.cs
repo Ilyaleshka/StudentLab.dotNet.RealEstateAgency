@@ -16,23 +16,21 @@ namespace RealEstateAgencyBackend.BLL.Services
     {
         private IUnitOfWork _dal;
         private IRentalRequestRepository _repository;
+        private IMapper _mapper;
 
         private UserManager<User> _userManager;
 
-        public RentalRequestService(IUnitOfWork dal = null)
+        public RentalRequestService(IUnitOfWork dal, IMapper mapper)
         {
-            this._dal = dal;
+            _dal = dal;
             _repository = this._dal.RentalRequestRepository;
-
+            _mapper = mapper;
             _userManager = new UserManager<User>(_dal.UserRepository);
         }
 
         public void Create(RentalRequestDto rentalRequestDto)
         {
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequestDto, RentalRequest>());
-            var mapper = config.CreateMapper();
-            RentalRequest rentalRequest = mapper.Map<RentalRequest>(rentalRequestDto);
+            RentalRequest rentalRequest = _mapper.Map<RentalRequest>(rentalRequestDto);
 
             User user = _userManager.FindById(rentalRequestDto.UserId);
             rentalRequest.User = user;
@@ -44,19 +42,14 @@ namespace RealEstateAgencyBackend.BLL.Services
         public RentalRequestDto Find(int id)
         {
             RentalRequest rentalRequest = _repository.Find(id);
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequest, RentalRequestDto>());
-            var mapper = config.CreateMapper();
-            RentalRequestDto rentalRequestDto = mapper.Map<RentalRequestDto>(rentalRequest);
+            RentalRequestDto rentalRequestDto = _mapper.Map<RentalRequestDto>(rentalRequest);
 
             return rentalRequestDto;
         }
 
         public IEnumerable<RentalRequestDto> GetAll()
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequest, RentalRequestDto>());
-            var mapper = config.CreateMapper();
-            List<RentalRequestDto> rentalRequestDtos = mapper.Map<IEnumerable<RentalRequest>, List<RentalRequestDto>>(_repository.GetAll());
+            List<RentalRequestDto> rentalRequestDtos = _mapper.Map<IEnumerable<RentalRequest>, List<RentalRequestDto>>(_repository.GetAll());
 
             return rentalRequestDtos;
         }
@@ -66,19 +59,14 @@ namespace RealEstateAgencyBackend.BLL.Services
             var temp = _repository.Remove(rentalRequest.Id);
             _dal.Save();
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequest, RentalRequestDto>());
-            var mapper = config.CreateMapper();
-            RentalRequestDto rentalRequestDto = mapper.Map<RentalRequestDto>(temp);
+            RentalRequestDto rentalRequestDto = _mapper.Map<RentalRequestDto>(temp);
 
             return rentalRequestDto;
         }
 
         public void Update(RentalRequestDto rentalRequestDto)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<RentalRequestDto, RentalRequest>());
-            var mapper = config.CreateMapper();
-            RentalRequest rentalRequest = mapper.Map<RentalRequest>(rentalRequestDto);
-
+            RentalRequest rentalRequest = _mapper.Map<RentalRequest>(rentalRequestDto);
             _repository.Update(rentalRequest);
             _dal.Save();
         }

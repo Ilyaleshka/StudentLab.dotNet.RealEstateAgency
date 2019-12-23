@@ -46,11 +46,15 @@ namespace RealEstateAgencyBackend
         }
         private static void RegisterServices(IKernel kernel)
         {
+
             kernel.Bind<AppDbContext>().To<AppDbContext>().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
+
             kernel.Bind<IUserService>().To<UserService>().InRequestScope();
             kernel.Bind<IRentalRequestService>().To<RentalRequestService>().InRequestScope();
+            kernel.Bind<IRentalAnnouncementService>().To<RentalAnnouncementService>().InRequestScope();
 
+            
             var mapperConfiguration = MapperConfig.CreateConfiguration();
             kernel.Bind<MapperConfiguration>().ToConstant(mapperConfiguration).InSingletonScope();
             kernel.Bind<IMapper>().ToMethod(ctx =>

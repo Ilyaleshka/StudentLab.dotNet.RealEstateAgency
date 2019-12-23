@@ -18,13 +18,25 @@ namespace RealEstateAgencyBackend
 
         public static void ConfigMapper(IMapperConfigurationExpression config)
         {
-            config.CreateMap<User, UserDto>();
-            config.CreateMap<UserDto, User>();
 
             config.CreateMap<RentalAnnouncementDto, RentalAnnouncement>();
             config.CreateMap<RentalAnnouncement, RentalAnnouncementDto>();
+            config.CreateMap<RentalAnnouncementCreateModel, RentalAnnouncementDto>();
+            config.CreateMap<RentalAnnouncementDto,RentalAnnouncementViewModel>();
 
-            config.CreateMap<RentalAnnouncement, RentalAnnouncementDto>();
+            config.CreateMap<RentalRequestDto, RentalRequest>();
+            config.CreateMap<RentalRequest, RentalRequestDto>();
+            config.CreateMap<RentalRequestCreateViewModel, RentalRequestDto>();
+            config.CreateMap<RentalRequestDto, RentalRequestViewModel>();
+
+            config.CreateMap<User, UserDto>();
+            config.CreateMap<UserDto, User>();
+            config.CreateMap<UserCreateModel, CreateUserDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.UserLastName, opt => opt.MapFrom(src => src.LastName));
+            config.CreateMap<UserDto, UserViewModel>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.UserLastName));
         }
     }
 }

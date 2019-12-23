@@ -6,9 +6,13 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using AutoMapper;
+using Microsoft.Owin.Security;
+using RealEstateAgencyBackend.BLL.DTO;
 using RealEstateAgencyBackend.BLL.Interfaces;
 using RealEstateAgencyBackend.DAL.Contexts;
 using RealEstateAgencyBackend.Models;
@@ -18,54 +22,69 @@ namespace RealEstateAgencyBackend.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class RequestsController : ApiController
     {
-        private AppDbContext db = new AppDbContext();
+        private IRentalRequestService _rentalRequestService;
+        private IUserService _userService;
+        private IMapper _mapper;
 
-        IRentalRequestService userService;
-
-        public RequestsController(IRentalRequestService service)
+        public RequestsController(IRentalRequestService service, IUserService userService, IMapper mapper)
         {
-            userService = service;
+            _userService = userService;
+            _rentalRequestService = service;
+            _mapper = mapper;
         }
 
         // POST: api/RentalRequests
+        [Authorize]
         [Route("api/requests/create")]
         [HttpPost]
-        public IHttpActionResult CreateRequest(RentalRequestCreateViewModel rentalRequest)
+        public IHttpActionResult CreateRentalRequest(RentalRequestCreateViewModel rentalRequestCreateModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-                    
-            return Created("",rentalRequest);
+            String userName = AuthManager.User.Identity.Name;
+            String userId = _userService.GetUserId(userName);
+
+            RentalRequestDto rentalRequest = _mapper.Map<RentalRequestDto>(rentalRequestCreateModel);
+            rentalRequest.UserId = userId;
+            _rentalRequestService.Create(rentalRequest);
+
+            return Created("", rentalRequestCreateModel);
         }
 
 
-        // GET: api/RentalRequests
-        public IQueryable<RentalRequest> GetRentalRequests()
+        [Route("api/requests")]
+        public IEnumerable<RentalRequestViewModel> GetRentalRequests()
         {
-            return db.RentalRequests;
+            var announcements = _rentalRequestService.GetAll();
+            IEnumerable<RentalRequestViewModel> results = _mapper.Map<IEnumerable<RentalRequestDto>, IEnumerable<RentalRequestViewModel>>(announcements);
+            return results;
         }
 
-        // GET: api/RentalRequests/5
-        [ResponseType(typeof(RentalRequest))]
+        // GET: api/RentalAnnouncements/5
+        [Route("api/requests/{id}")]
+        [ResponseType(typeof(RentalRequestViewModel))]
         public IHttpActionResult GetRentalRequest(int id)
         {
-            RentalRequest rentalRequest = db.RentalRequests.Find(id);
-            if (rentalRequest == null)
-            {
-                return NotFound();
-            }
+            RentalRequestDto rentalRequest = _rentalRequestService.Find(id);
 
-            return Ok(rentalRequest);
+            if (rentalRequest == null)
+                return NotFound();
+
+            RentalRequestViewModel view = _mapper.Map<RentalRequestViewModel>(rentalRequest);
+
+            return Ok(view);
         }
+
+
 
         // PUT: api/RentalRequests/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutRentalRequest(int id, RentalRequest rentalRequest)
         {
-            if (!ModelState.IsValid)
+           /* if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -92,14 +111,14 @@ namespace RealEstateAgencyBackend.Controllers
                     throw;
                 }
             }
-
+            */
             return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST: api/RentalRequests
         [ResponseType(typeof(RentalRequest))]
         public IHttpActionResult PostRentalRequest(RentalRequest rentalRequest)
-        {
+        {/*
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -107,14 +126,14 @@ namespace RealEstateAgencyBackend.Controllers
 
             db.RentalRequests.Add(rentalRequest);
             db.SaveChanges();
-
+            */
             return CreatedAtRoute("DefaultApi", new { id = rentalRequest.Id }, rentalRequest);
         }
 
         // DELETE: api/RentalRequests/5
-        [ResponseType(typeof(RentalRequest))]
+        //[ResponseType(typeof(RentalRequest))]
         public IHttpActionResult DeleteRentalRequest(int id)
-        {
+        {/*
             RentalRequest rentalRequest = db.RentalRequests.Find(id);
             if (rentalRequest == null)
             {
@@ -123,22 +142,16 @@ namespace RealEstateAgencyBackend.Controllers
 
             db.RentalRequests.Remove(rentalRequest);
             db.SaveChanges();
-
-            return Ok(rentalRequest);
+            */
+            return Ok();
         }
 
-        protected override void Dispose(bool disposing)
+        private IAuthenticationManager AuthManager
         {
-            if (disposing)
+            get
             {
-                db.Dispose();
+                return HttpContext.Current.GetOwinContext().Authentication;
             }
-            base.Dispose(disposing);
-        }
-
-        private bool RentalRequestExists(int id)
-        {
-            return db.RentalRequests.Count(e => e.Id == id) > 0;
         }
     }
 }

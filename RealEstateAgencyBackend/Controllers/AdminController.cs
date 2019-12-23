@@ -14,14 +14,16 @@ namespace RealEstateAgencyBackend.Controllers
 
     public class AdminController : System.Web.Http.ApiController
     {
-        [Authorize]
-        public IQueryable<CreateModel> GetUsers()
+        //[Authorize]
+
+        //It's only for debug, dont pay attention
+        public IQueryable<UserCreateModel> GetUsers()
         {
             var users= UserManager.Users;
-            List<CreateModel> userModels = new List<CreateModel>();
+            List<UserCreateModel> userModels = new List<UserCreateModel>();
             foreach (var user in users)
             {
-                userModels.Add(new CreateModel() {Name = user.UserName, Email = user.Email, Password = user.PasswordHash, LastName = user
+                userModels.Add(new UserCreateModel() {Name = user.UserName, Email = user.Email, Password = user.PasswordHash, LastName = user
                 .UserLastName});
             }
             return userModels.AsQueryable();
@@ -36,34 +38,9 @@ namespace RealEstateAgencyBackend.Controllers
             }
         }
 
-        // POST: api/RentalAnnouncements
-        [ResponseType(typeof(RentalAnnouncement))]
-        public IHttpActionResult PostRegister(CreateModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-            User user = new User { UserName = model.Name, Email = model.Email};
-            IdentityResult result = UserManager.Create(user, model.Password);
-
-            if (result.Succeeded)
-            {
-                return Ok();
-            }
-            else
-            {
-                AddErrorsFromResult(result);
-                return BadRequest(ModelState);
-                //return Ok();
-            }
-        }
-
-
-        [ResponseType(typeof(User))]
         public IHttpActionResult DeleteUser(string id)
-        {
+        {/*
             User user = UserManager.FindById(id);
             if (user == null)
             {
@@ -71,16 +48,16 @@ namespace RealEstateAgencyBackend.Controllers
             }
 
             UserManager.Delete(user);
-
-            return Ok(user);
+            */
+            return Ok();
         }
 
         private void AddErrorsFromResult(IdentityResult result)
-        {
+        {/*
             foreach (string error in result.Errors)
             {
                 ModelState.AddModelError("", error);
-            }
+            }*/
         }
 
     }

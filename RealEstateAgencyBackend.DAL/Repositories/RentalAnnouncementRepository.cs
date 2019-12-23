@@ -42,7 +42,9 @@ namespace RealEstateAgencyBackend.DAL.Repositories
 
         public IEnumerable<RentalAnnouncement> GetAll()
         {
-            return _context.RentalAnnouncements.Where(announcement => announcement.Reservations.Any(reservation => reservation.IsActive));
+            return _context.RentalAnnouncements
+                .Where(announcement => announcement.Reservations
+                    .All(reservation => (!reservation.IsActive && reservation.IsConfirmed)));
         }
 
         public IEnumerable<RentalAnnouncement> FindByUserId(string userID)

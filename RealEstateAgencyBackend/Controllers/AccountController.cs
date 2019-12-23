@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using RealEstateAgencyBackend.BLL;
@@ -22,41 +23,49 @@ namespace RealEstateAgencyBackend.Controllers
     [Authorize]
     public class AccountController : ApiController
     {
-        IUserService userService;
+        IUserService _userService;
+        private IMapper _mapper;
 
-        public AccountController(IUserService service)
+        public AccountController(IUserService service,IMapper mapper)
         {
-            userService = service;
+            _userService = service;
+            _mapper = mapper;
         }
 
 
         [Route("api/account/login")]
         [HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult Login(LoginViewModel model)
+        public IHttpActionResult Login(UserLoginModel model)
         {
-            UserDto user = userService.Find(model.Name, model.Password);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(string.Join("\n", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
+            }
+
+            UserDto user = _userService.Find(model.Name, model.Password);
 
             if (user == null)
             {
-                String errorResponce = String.Empty;
-                errorResponce = string.Join(";\n", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
-                errorResponce = string.Join(";\n", errorResponce, "Incorrect login or password");
-                return BadRequest(errorResponce);
+                return BadRequest("Incorrect login or password");
             }
             else
             {
-                ClaimsIdentity ident = userService.CreateIdentity(model.Name, model.Password, DefaultAuthenticationTypes.ApplicationCookie);
+                ClaimsIdentity ident = _userService.CreateIdentity(model.Name, model.Password, DefaultAuthenticationTypes.ApplicationCookie);
 
                 AuthManager.SignOut();
                 AuthManager.SignIn(new AuthenticationProperties
                 {
                     IsPersistent = false
-                }, ident);
+                },
+                ident);
             }
 
-            return Ok(new ResponceModel() {Id = user.Id, Name = user.UserName,LastName = user.UserLastName, Email=user.Email });
+            //return Ok(new UserViewModel() {Id = user.Id, Name = user.UserName,LastName = user.UserLastName, Email=user.Email });
+            return Ok(_mapper.Map<UserViewModel>(user));
         }
+
+
 
         [Route("api/account/logout")]
         [HttpPost]
@@ -72,7 +81,7 @@ namespace RealEstateAgencyBackend.Controllers
         [Route("api/account/register")]
         [HttpPost]
         [AllowAnonymous]
-        public IHttpActionResult Register(CreateModel model)
+        public IHttpActionResult Register(UserCreateModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -81,9 +90,8 @@ namespace RealEstateAgencyBackend.Controllers
                 return BadRequest(errorResponce);
             }
 
-            //User user = new User { UserName = model.Name, Email = model.Email,UserLastName = model.LastName };
-            CreateUserDto user = new CreateUserDto { UserName = model.Name, Email = model.Email, UserLastName = model.LastName, Password = model.Password };
-            IdentityResult result = userService.Create(user);
+            CreateUserDto user =_mapper.Map<CreateUserDto>(model);
+            IdentityResult result = _userService.Create(user);
 
             if (result.Succeeded)
             {
@@ -96,7 +104,6 @@ namespace RealEstateAgencyBackend.Controllers
             }
         }
 
-
         private IAuthenticationManager AuthManager
         {
             get
@@ -105,6 +112,7 @@ namespace RealEstateAgencyBackend.Controllers
             }
         }
 
+        [NonAction]
         private void AddErrorsFromResult(IdentityResult result)
         {
             foreach (string error in result.Errors)

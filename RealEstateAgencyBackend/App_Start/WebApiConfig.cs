@@ -20,6 +20,8 @@ namespace RealEstateAgencyBackend
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            //config.
         }
     }
 }

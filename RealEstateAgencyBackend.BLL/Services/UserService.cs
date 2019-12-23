@@ -13,7 +13,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 {
     public class UserService : IUserService
     {
-        IUnitOfWork _dal;
+        private IUnitOfWork _dal;
         private IMapper _mapper;
 
         private UserManager<User> _userManager;
@@ -91,6 +91,7 @@ namespace RealEstateAgencyBackend.BLL.Services
         }
 
 
+
         public IEnumerable<RentalAnnouncementDto> GetRentalAnnouncements(string id)
         {
             User user = _userManager.FindById(id);
@@ -107,11 +108,12 @@ namespace RealEstateAgencyBackend.BLL.Services
 
         public bool IsUserExist(string userName)
         {
-            return _userManager.FindByName(userName) == null ? false : true;
+            return (_userManager.FindByName(userName) == null) ? false : true;
         }
 
         public string GetUserId(string userName)
         {
+            User user = _userManager.FindByName(userName);
             return _userManager.FindByName(userName)?.Id;
         }
 

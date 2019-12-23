@@ -7,7 +7,7 @@ using System.Web;
 
 namespace RealEstateAgencyBackend.Models
 {
-    public class CreateModel
+    public class UserCreateModel
     {
         [Required]
         public string Name { get; set; }
@@ -20,9 +20,11 @@ namespace RealEstateAgencyBackend.Models
 
         [Required]
         public string Password { get; set; }
+
+        public string ConfirmPassword { get; set; }
     }
 
-    public class LoginViewModel
+    public class UserLoginModel
     {
         [Required]
         public string Name { get; set; }
@@ -31,7 +33,7 @@ namespace RealEstateAgencyBackend.Models
         public string Password { get; set; }
     }
 
-    public class ResponceModel
+    public class UserViewModel
     {
         [Required]
         public string Id { get; set; }
