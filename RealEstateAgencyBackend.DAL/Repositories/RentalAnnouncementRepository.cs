@@ -42,6 +42,10 @@ namespace RealEstateAgencyBackend.DAL.Repositories
 
         public IEnumerable<RentalAnnouncement> GetAll()
         {
+            // Database query is performend when 'All' is called.
+            // It means that all filtering that you do in services is filtering in dotnet list that is already returned from database.
+            // It leads to database perfomance issues because you get too much data that you don't need.
+            // You should return IQueryable here.
             return _context.RentalAnnouncements
                 .Where(announcement => announcement.Reservations
                     .All(reservation => (!reservation.IsActive && reservation.IsConfirmed)));

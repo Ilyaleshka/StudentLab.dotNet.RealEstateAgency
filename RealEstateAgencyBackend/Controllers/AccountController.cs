@@ -21,8 +21,10 @@ using System.Web.Http.Description;
 namespace RealEstateAgencyBackend.Controllers
 {
     [Authorize]
+    // Liiks like all actions use AllowAnonymous so we don't need Authorize attribute
     public class AccountController : ApiController
     {
+        // Please use consisted code style. You should always use 'private' or never use it.
         IUserService _userService;
         private IMapper _mapper;
 
@@ -112,6 +114,7 @@ namespace RealEstateAgencyBackend.Controllers
             }
         }
 
+        // Is it used anywhere?
         [NonAction]
         private void AddErrorsFromResult(IdentityResult result)
         {

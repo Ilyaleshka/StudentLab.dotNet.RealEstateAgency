@@ -37,6 +37,7 @@ namespace RealEstateAgencyBackend.Controllers
         [Authorize]
         [Route("api/requests/create")]
         [HttpPost]
+        // You can use default 'Create' action and it will automatically map to correct url.
         public IHttpActionResult CreateRentalRequest(RentalRequestCreateViewModel rentalRequestCreateModel)
         {
             if (!ModelState.IsValid)
@@ -49,8 +50,10 @@ namespace RealEstateAgencyBackend.Controllers
 
             RentalRequestDto rentalRequest = _mapper.Map<RentalRequestDto>(rentalRequestCreateModel);
             rentalRequest.UserId = userId;
+            // Service should return new DTO and you should convert it to ViewModel and return.
             _rentalRequestService.Create(rentalRequest);
 
+            // You can directly return ViewModel
             return Created("", rentalRequestCreateModel);
         }
 

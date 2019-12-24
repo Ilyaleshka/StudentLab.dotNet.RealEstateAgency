@@ -144,6 +144,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 
             _dal.ReservationRepository.Create(reservation);
             _dal.Save();
+            // Probably is makes sense to return resevation?
             return true;
         }
 
