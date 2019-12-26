@@ -1,26 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Cors;
-using System.Web.Http.Description;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Owin.Security;
 using RealEstateAgencyBackend.BLL.DTO;
 using RealEstateAgencyBackend.BLL.Interfaces;
-using RealEstateAgencyBackend.DAL.Contexts;
 using RealEstateAgencyBackend.Models;
+using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace RealEstateAgencyBackend.Controllers
 {
-    // Can we enable CORS by default for all controllers?
-    [EnableCors(  "*",  "*", "*")]
     public class AnnouncementsController : ApiController
     {
         private IMapper _mapper;
@@ -34,6 +24,7 @@ namespace RealEstateAgencyBackend.Controllers
             _mapper = mapper;
         }
 
+
         [HttpGet]
         [Route("api/announcements")]
         public IEnumerable<RentalAnnouncementViewModel> GetRentalAnnouncements()
@@ -42,6 +33,7 @@ namespace RealEstateAgencyBackend.Controllers
             IEnumerable<RentalAnnouncementViewModel> results = _mapper.Map<IEnumerable<RentalAnnouncementDto>, IEnumerable<RentalAnnouncementViewModel>>(announcements);
             return results;
         }
+
 
         [HttpGet]
         [Route("api/announcements/{id}")]
@@ -58,11 +50,12 @@ namespace RealEstateAgencyBackend.Controllers
             return Ok(view);
         }
 
+
         [Authorize]
-        [Route("api/announcements/create")]
         [HttpPost]
+        [Route("api/announcements/create")]
         [ResponseType(typeof(RentalAnnouncementCreateModel))]
-        public IHttpActionResult CreateRentalAnnouncement(RentalAnnouncementCreateModel rentalAnnouncementCreateModel)
+        public IHttpActionResult Create(RentalAnnouncementCreateModel rentalAnnouncementCreateModel)
         {
             if (!ModelState.IsValid)
             {
@@ -79,10 +72,10 @@ namespace RealEstateAgencyBackend.Controllers
             return Created("", rentalAnnouncementCreateModel);
         }
 
-        /*
+
         // PUT: api/RentalAnnouncements/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutRentalAnnouncement(int id, RentalAnnouncement rentalAnnouncement)
+        /*[ResponseType(typeof(void))]
+        public IHttpActionResult UpdateRentalAnnouncement(int id, RentalAnnouncement rentalAnnouncement)
         {
             if (!ModelState.IsValid)
             {
@@ -113,26 +106,29 @@ namespace RealEstateAgencyBackend.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
-        }
-        */
+        }*/
 
-            /*
+
         // DELETE: api/RentalAnnouncements/5
-        [ResponseType(typeof(RentalAnnouncement))]
+        [Authorize]
+        [HttpDelete]
+        [Route("api/announcements/{id}")]
+        [ResponseType(typeof(RentalAnnouncementViewModel))]
         public IHttpActionResult DeleteRentalAnnouncement(int id)
         {
-            RentalAnnouncement rentalAnnouncement = db.RentalAnnouncements.Find(id);
-            if (rentalAnnouncement == null)
-            {
+            String userName = AuthManager.User.Identity.Name;
+            String userId = _userService.GetUserId(userName);
+
+            RentalAnnouncementDto announcement = _rentalAnnouncementService.Find(id);
+
+            if (announcement.UserId != userId)
                 return NotFound();
-            }
 
-            db.RentalAnnouncements.Remove(rentalAnnouncement);
-            db.SaveChanges();
+            RentalAnnouncementDto deletedAnnouncement = _rentalAnnouncementService.Remove(announcement);
 
-            return Ok(rentalAnnouncement);
+            return Ok(_mapper.Map<RentalAnnouncementViewModel>(deletedAnnouncement));
         }
-        */
+        
 
         private IAuthenticationManager AuthManager
         {

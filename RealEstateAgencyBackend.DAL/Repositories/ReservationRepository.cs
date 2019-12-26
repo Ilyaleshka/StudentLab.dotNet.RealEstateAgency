@@ -18,9 +18,10 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             _context = context;
         }
 
-        public void Create(Reservation item)
+        public Reservation Create(Reservation item)
         {
             _context.Reservations.Add(item);
+            return item;
         }
 
         public Reservation Find(int id)
@@ -28,7 +29,7 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             return _context.Reservations.Find(id);
         }
 
-        public IEnumerable<Reservation> GetAll()
+        public IQueryable<Reservation> GetAll()
         {
             return _context.Reservations;
         }
@@ -41,9 +42,11 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             return reserv;
         }
 
-        public void Update(Reservation item)
+        public Reservation Update(Reservation item)
         {
             _context.Entry(item).State = EntityState.Modified;
+
+            return item;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace RealEstateAgencyBackend.BLL.Services
             _userManager = new UserManager<User>(_dal.UserRepository);
         }
 
-        public void Create(RentalRequestDto rentalRequestDto)
+        public RentalRequestDto Create(RentalRequestDto rentalRequestDto)
         {
             RentalRequest rentalRequest = _mapper.Map<RentalRequest>(rentalRequestDto);
 
@@ -37,6 +37,8 @@ namespace RealEstateAgencyBackend.BLL.Services
 
             _repository.Create(rentalRequest);
             _dal.Save();
+
+            return _mapper.Map<RentalRequestDto>(rentalRequest);
         }
 
         public RentalRequestDto Find(int id)
@@ -64,11 +66,13 @@ namespace RealEstateAgencyBackend.BLL.Services
             return rentalRequestDto;
         }
 
-        public void Update(RentalRequestDto rentalRequestDto)
+        public RentalRequestDto Update(RentalRequestDto rentalRequestDto)
         {
             RentalRequest rentalRequest = _mapper.Map<RentalRequest>(rentalRequestDto);
             _repository.Update(rentalRequest);
             _dal.Save();
+
+            return _mapper.Map<RentalRequestDto>(rentalRequest);
         }
 
     }

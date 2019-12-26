@@ -15,9 +15,10 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             _context = context;
         }
 
-        public void Create(RentalRequest item)
+        public RentalRequest Create(RentalRequest item)
         {
             _context.RentalRequests.Add(item);
+            return item;
         }
 
         public RentalRequest Remove(int id)
@@ -33,7 +34,7 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             return _context.RentalRequests.Find(id);
         }
 
-        public IEnumerable<RentalRequest> GetAll()
+        public IQueryable<RentalRequest> GetAll()
         {
             return _context.RentalRequests;
         }
@@ -43,9 +44,10 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             return _context.RentalRequests.Where(request => request.UserId == userID);
         }
 
-        public void Update(RentalRequest item)
+        public RentalRequest Update(RentalRequest item)
         {
             _context.Entry(item).State = EntityState.Modified;
+            return item;
         }
     }
 }

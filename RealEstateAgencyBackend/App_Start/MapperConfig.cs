@@ -3,6 +3,7 @@ using RealEstateAgencyBackend.BLL.DTO;
 using RealEstateAgencyBackend.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 
@@ -18,6 +19,8 @@ namespace RealEstateAgencyBackend
 
         public static void ConfigMapper(IMapperConfigurationExpression config)
         {
+            string str = ConfigurationManager.AppSettings["hostAddress"].ToString();
+
 
             config.CreateMap<RentalAnnouncementDto, RentalAnnouncement>();
             config.CreateMap<RentalAnnouncement, RentalAnnouncementDto>();

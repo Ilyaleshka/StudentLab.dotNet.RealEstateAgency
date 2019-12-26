@@ -4,6 +4,7 @@ using RealEstateAgencyBackend.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,9 +21,10 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             _context = userContext;
         }
 
-        public void Create(User item)
+        public User Create(User item)
         {
-            CreateAsync(item);
+            CreateAsync(item).GetAwaiter().GetResult();
+            return item;
         }
 
         public User Find(string id)
@@ -30,7 +32,7 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             return _context.Users.Find(id);
         }
 
-        public IEnumerable<User> GetAll()
+        public IQueryable<User> GetAll()
         {
             return _context.Users;
         }
@@ -43,9 +45,10 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             return user;
         }
 
-        public void Update(User item)
+        public User Update(User item)
         {
             _context.Entry(item).State = EntityState.Modified;
+            return item;
         }
 
     }

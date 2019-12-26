@@ -16,9 +16,10 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             _context = context;
         }
 
-        public void Create(RentalAnnouncement item)
+        public RentalAnnouncement Create(RentalAnnouncement item)
         {
             _context.RentalAnnouncements.Add(item);
+            return item;
         }
 
         public RentalAnnouncement Remove(int id)
@@ -40,15 +41,19 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             return _context.RentalAnnouncements.Find(id);
         }
 
-        public IEnumerable<RentalAnnouncement> GetAll()
+        public IQueryable<RentalAnnouncement> GetAll()
         {
             // Database query is performend when 'All' is called.
             // It means that all filtering that you do in services is filtering in dotnet list that is already returned from database.
             // It leads to database perfomance issues because you get too much data that you don't need.
             // You should return IQueryable here.
-            return _context.RentalAnnouncements
+
+            return _context.RentalAnnouncements;
+
+            /*return _context.RentalAnnouncements
                 .Where(announcement => announcement.Reservations
-                    .All(reservation => (!reservation.IsActive && reservation.IsConfirmed)));
+                    .All(reservation => (!reservation.IsActive && reservation.IsConfirmed)));*/
+
         }
 
         public IEnumerable<RentalAnnouncement> FindByUserId(string userID)
@@ -56,9 +61,10 @@ namespace RealEstateAgencyBackend.DAL.Repositories
             return _context.RentalAnnouncements.Where(announcement => announcement.UserId == userID);
         }
 
-        public void Update(RentalAnnouncement item)
+        public RentalAnnouncement Update(RentalAnnouncement item)
         {
             _context.Entry(item).State = EntityState.Modified;
+            return item;
         }
     }
 }

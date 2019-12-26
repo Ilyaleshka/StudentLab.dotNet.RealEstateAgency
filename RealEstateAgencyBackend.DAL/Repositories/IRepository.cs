@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace RealEstateAgencyBackend.DAL.Repositories
 {
     public interface IRepository<K, T> where T : class
     {
-        IEnumerable<T> GetAll();
+        IQueryable<T> GetAll();
         T Find(K id);
-        void Create(T item);
-        void Update(T item);
+        T Create(T item);
+        T Update(T item);
         T Remove(K id);
     }
 

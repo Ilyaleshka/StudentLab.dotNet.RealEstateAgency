@@ -52,13 +52,6 @@ namespace RealEstateAgencyBackend.Controllers
             return Ok();
         }
 
-        private void AddErrorsFromResult(IdentityResult result)
-        {/*
-            foreach (string error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }*/
-        }
 
     }
 }

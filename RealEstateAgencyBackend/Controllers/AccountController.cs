@@ -20,12 +20,10 @@ using System.Web.Http.Description;
 
 namespace RealEstateAgencyBackend.Controllers
 {
-    [Authorize]
-    // Liiks like all actions use AllowAnonymous so we don't need Authorize attribute
     public class AccountController : ApiController
     {
         // Please use consisted code style. You should always use 'private' or never use it.
-        IUserService _userService;
+        private IUserService _userService;
         private IMapper _mapper;
 
         public AccountController(IUserService service,IMapper mapper)
@@ -37,7 +35,6 @@ namespace RealEstateAgencyBackend.Controllers
 
         [Route("api/account/login")]
         [HttpPost]
-        [AllowAnonymous]
         public IHttpActionResult Login(UserLoginModel model)
         {
             if (!ModelState.IsValid)
@@ -71,7 +68,6 @@ namespace RealEstateAgencyBackend.Controllers
 
         [Route("api/account/logout")]
         [HttpPost]
-        [AllowAnonymous]
         public IHttpActionResult Logout()
         {
             if (AuthManager.User != null)            
@@ -82,7 +78,6 @@ namespace RealEstateAgencyBackend.Controllers
 
         [Route("api/account/register")]
         [HttpPost]
-        [AllowAnonymous]
         public IHttpActionResult Register(UserCreateModel model)
         {
             if (!ModelState.IsValid)
@@ -111,16 +106,6 @@ namespace RealEstateAgencyBackend.Controllers
             get
             {
                 return HttpContext.Current.GetOwinContext().Authentication;
-            }
-        }
-
-        // Is it used anywhere?
-        [NonAction]
-        private void AddErrorsFromResult(IdentityResult result)
-        {
-            foreach (string error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
             }
         }
 

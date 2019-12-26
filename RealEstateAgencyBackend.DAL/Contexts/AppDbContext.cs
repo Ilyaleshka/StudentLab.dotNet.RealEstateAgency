@@ -21,6 +21,7 @@ namespace RealEstateAgencyBackend.DAL.Contexts
         {
             return new AppDbContext();
         }
+
     }
 
     public class IdentityDbInit : DropCreateDatabaseIfModelChanges<AppDbContext>//DropCreateDatabaseIfModelChanges<AppDbContext>

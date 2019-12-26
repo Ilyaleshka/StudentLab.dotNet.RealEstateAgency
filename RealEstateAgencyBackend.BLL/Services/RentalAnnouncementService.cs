@@ -6,6 +6,7 @@ using RealEstateAgencyBackend.DAL.Repositories;
 using RealEstateAgencyBackend.DAL.UnitOfWork;
 using RealEstateAgencyBackend.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RealEstateAgencyBackend.BLL.Services
 {
@@ -25,7 +26,7 @@ namespace RealEstateAgencyBackend.BLL.Services
             _userManager = new UserManager<User>(_dal.UserRepository);
         }
 
-        public void Create(RentalAnnouncementDto rentalAnnouncementDto)
+        public RentalAnnouncementDto Create(RentalAnnouncementDto rentalAnnouncementDto)
         {
             RentalAnnouncement rentalAnnouncement = _mapper.Map<RentalAnnouncement>(rentalAnnouncementDto);
 
@@ -34,6 +35,8 @@ namespace RealEstateAgencyBackend.BLL.Services
 
             _repository.Create(rentalAnnouncement);
             _dal.Save();
+
+            return _mapper.Map<RentalAnnouncementDto>(rentalAnnouncement);
         }
 
         public RentalAnnouncementDto Find(int id)
@@ -44,9 +47,16 @@ namespace RealEstateAgencyBackend.BLL.Services
             return rentalAnnouncementDto;
         }
 
+        //
+
         public IEnumerable<RentalAnnouncementDto> GetAll()
         {
-            List<RentalAnnouncementDto> rentalAnnouncementDtos = _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementDto>>(_repository.GetAll());
+            IEnumerable<RentalAnnouncement> announcements = _repository.GetAll();
+
+            announcements = announcements.Where(announcement => announcement.Reservations
+                    .All(reservation => (!reservation.IsActive && reservation.IsConfirmed)));
+
+            List<RentalAnnouncementDto> rentalAnnouncementDtos = _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementDto>>(announcements);
 
             return rentalAnnouncementDtos;
         }
@@ -60,11 +70,13 @@ namespace RealEstateAgencyBackend.BLL.Services
             return rentalAnnouncementDto;
         }
 
-        public void Update(RentalAnnouncementDto rentalAnnouncementDto)
+        public RentalAnnouncementDto Update(RentalAnnouncementDto rentalAnnouncementDto)
         {
             RentalAnnouncement rentalAnnouncement = _mapper.Map<RentalAnnouncement>(rentalAnnouncementDto);
             _repository.Update(rentalAnnouncement);
             _dal.Save();
+
+            return _mapper.Map<RentalAnnouncementDto>(rentalAnnouncement);
         }
     }
 }

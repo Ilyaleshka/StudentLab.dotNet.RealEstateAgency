@@ -37,8 +37,12 @@ namespace RealEstateAgencyBackend.Controllers
         [HttpGet]
         public IHttpActionResult Requests()
         {
-
-            return Ok();
+            String userName = AuthManager.User.Identity.Name;
+            String userId = _userService.GetUserId(userName);
+            IEnumerable<RentalRequestDto> rentalRequests = null;
+            if (userId != null)
+                rentalRequests = _userService.GetRentalRequests(userId);
+            return Ok(rentalRequests);
         }
 
         [Route("api/profile/reservations")]

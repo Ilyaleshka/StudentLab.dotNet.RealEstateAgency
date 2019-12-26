@@ -11,8 +11,8 @@ namespace RealEstateAgencyBackend.BLL.Interfaces
 
         RentalAnnouncementDto Remove(RentalAnnouncementDto rentalAnnouncement);
 
-        void Update(RentalAnnouncementDto rentalAnnouncement);
+        RentalAnnouncementDto Update(RentalAnnouncementDto rentalAnnouncement);
 
-        void Create(RentalAnnouncementDto rentalAnnouncement);
+        RentalAnnouncementDto Create(RentalAnnouncementDto rentalAnnouncement);
     }
 }

@@ -37,8 +37,7 @@ namespace RealEstateAgencyBackend.Controllers
         [Authorize]
         [Route("api/requests/create")]
         [HttpPost]
-        // You can use default 'Create' action and it will automatically map to correct url.
-        public IHttpActionResult CreateRentalRequest(RentalRequestCreateViewModel rentalRequestCreateModel)
+        public IHttpActionResult Create(RentalRequestCreateViewModel rentalRequestCreateModel)
         {
             if (!ModelState.IsValid)
             {
@@ -50,14 +49,12 @@ namespace RealEstateAgencyBackend.Controllers
 
             RentalRequestDto rentalRequest = _mapper.Map<RentalRequestDto>(rentalRequestCreateModel);
             rentalRequest.UserId = userId;
-            // Service should return new DTO and you should convert it to ViewModel and return.
-            _rentalRequestService.Create(rentalRequest);
+            RentalRequestDto createdRentalRequest = _rentalRequestService.Create(rentalRequest);
 
-            // You can directly return ViewModel
-            return Created("", rentalRequestCreateModel);
+            return Ok(_mapper.Map<RentalRequestViewModel>(createdRentalRequest));
         }
 
-
+        [HttpGet]
         [Route("api/requests")]
         public IEnumerable<RentalRequestViewModel> GetRentalRequests()
         {
@@ -67,6 +64,7 @@ namespace RealEstateAgencyBackend.Controllers
         }
 
         // GET: api/RentalAnnouncements/5
+        [HttpGet]
         [Route("api/requests/{id}")]
         [ResponseType(typeof(RentalRequestViewModel))]
         public IHttpActionResult GetRentalRequest(int id)
@@ -118,36 +116,25 @@ namespace RealEstateAgencyBackend.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/RentalRequests
-        [ResponseType(typeof(RentalRequest))]
-        public IHttpActionResult PostRentalRequest(RentalRequest rentalRequest)
-        {/*
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.RentalRequests.Add(rentalRequest);
-            db.SaveChanges();
-            */
-            return CreatedAtRoute("DefaultApi", new { id = rentalRequest.Id }, rentalRequest);
-        }
-
-        // DELETE: api/RentalRequests/5
-        //[ResponseType(typeof(RentalRequest))]
+        [HttpDelete]
+        [ResponseType(typeof(RentalRequestViewModel))]
+        [Authorize]
+        [Route("api/requests/{id}")]
         public IHttpActionResult DeleteRentalRequest(int id)
-        {/*
-            RentalRequest rentalRequest = db.RentalRequests.Find(id);
-            if (rentalRequest == null)
-            {
-                return NotFound();
-            }
+        {
+            String userName = AuthManager.User.Identity.Name;
+            String userId = _userService.GetUserId(userName);
 
-            db.RentalRequests.Remove(rentalRequest);
-            db.SaveChanges();
-            */
-            return Ok();
+            RentalRequestDto request = _rentalRequestService.Find(id);
+
+            if (request.UserId != userId) 
+                return NotFound();
+
+            RentalRequestDto deletedRequest = _rentalRequestService.Remove(request);
+
+            return Ok(_mapper.Map<RentalRequestViewModel>(deletedRequest));
         }
+
 
         private IAuthenticationManager AuthManager
         {

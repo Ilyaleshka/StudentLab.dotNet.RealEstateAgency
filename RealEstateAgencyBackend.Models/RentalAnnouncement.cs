@@ -26,5 +26,7 @@ namespace RealEstateAgencyBackend.Models
         public virtual User User { get; set; }
 
         public virtual ICollection<Reservation> Reservations { get; set; }
+
+        public virtual ICollection<PostImage> PostImages { get; set; }
     }
 }
