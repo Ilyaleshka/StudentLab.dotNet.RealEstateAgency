@@ -19,6 +19,7 @@ using RealEstateAgencyBackend.Models;
 
 namespace RealEstateAgencyBackend.Controllers
 {
+    // Can we enable CORS by default for all controllers?
     [EnableCors(  "*",  "*", "*")]
     public class AnnouncementsController : ApiController
     {

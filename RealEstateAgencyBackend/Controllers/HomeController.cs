@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace RealEstateAgencyBackend.Controllers
 {
+    // Do we need this controller?
     public class HomeController : Controller
     {
         public ActionResult Index()
