@@ -383,6 +383,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Public\" />
     <Folder Include="Views\Users\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

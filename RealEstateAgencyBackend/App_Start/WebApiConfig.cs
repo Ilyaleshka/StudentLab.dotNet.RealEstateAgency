@@ -15,6 +15,16 @@ namespace RealEstateAgencyBackend
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+
+            /*
+            config.RouteExistingFiles = true;
+            config.MapRoute(
+                name: "staticFileRoute",
+                url: "api/images/{*file}",
+                defaults: new { controller = "Image", action = "Get" }
+            );
+            */
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",

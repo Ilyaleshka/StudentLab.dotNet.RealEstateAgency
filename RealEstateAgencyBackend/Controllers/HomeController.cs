@@ -14,5 +14,13 @@ namespace RealEstateAgencyBackend.Controllers
 
             return View();
         }
+
+        /*public ActionResult HandleStatic(string filename)
+        {
+            Response.ContentType = "image/jpeg"; // for JPEG file
+            string physicalFileName = @"C:\Program Files\Adrenalin\Adrenalin\UploadedFiles\TemplateFile\abc.jpg";
+            Response.WriteFile(physicalFileName);
+            return 
+        }*/
     }
 }
