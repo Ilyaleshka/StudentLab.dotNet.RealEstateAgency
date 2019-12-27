@@ -17,8 +17,7 @@ namespace RealEstateAgencyBackend.DAL.Repositories
 
         public RentalRequest Create(RentalRequest item)
         {
-            _context.RentalRequests.Add(item);
-            return item;
+            return _context.RentalRequests.Add(item);
         }
 
         public RentalRequest Remove(int id)

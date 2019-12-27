@@ -25,7 +25,7 @@ namespace RealEstateAgencyBackend.BLL.DTO
 
         public String UserId { get; set; }
 
-        public virtual ICollection<PostImage> PostImages { get; set; }
+        public  ICollection<ImageDto> Images { get; set; }
     }
 
     public class RentalAnnouncementReservationDto
@@ -46,6 +46,6 @@ namespace RealEstateAgencyBackend.BLL.DTO
 
         public String UserId { get; set; }
 
-        public virtual ICollection<PostImage> PostImages { get; set; }
+        public ICollection<ImageDto> Images { get; set; }
     }
 }

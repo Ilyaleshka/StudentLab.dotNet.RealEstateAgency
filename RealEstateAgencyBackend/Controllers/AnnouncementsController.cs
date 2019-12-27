@@ -5,6 +5,8 @@ using RealEstateAgencyBackend.BLL.Interfaces;
 using RealEstateAgencyBackend.Models;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -16,12 +18,14 @@ namespace RealEstateAgencyBackend.Controllers
         private IMapper _mapper;
         private IRentalAnnouncementService _rentalAnnouncementService;
         private IUserService _userService;
+        private IImageService _imageService;
 
-        public AnnouncementsController(IRentalAnnouncementService rentalAnnouncementService, IUserService userService, IMapper mapper)
+        public AnnouncementsController(IRentalAnnouncementService rentalAnnouncementService, IUserService userService,IImageService imageService, IMapper mapper)
         {
             _rentalAnnouncementService = rentalAnnouncementService;
             _userService = userService;
             _mapper = mapper;
+            _imageService = imageService;
         }
 
 
@@ -62,11 +66,21 @@ namespace RealEstateAgencyBackend.Controllers
                 return BadRequest(ModelState);
             }
 
+            //List<String> images = SaveUserImage();
+            var folderPath = HttpContext.Current.Server.MapPath("~/Public/");
+            ICollection<ImageDto> images = new List<ImageDto>();
+            foreach (var img in rentalAnnouncementCreateModel.Base64Images)
+            {
+                images.Add(_imageService.Create(img, folderPath));
+            }
+
             String userName = AuthManager.User.Identity.Name;
             String userId = _userService.GetUserId(userName);
 
             RentalAnnouncementDto rentalAnnouncement = _mapper.Map<RentalAnnouncementDto>(rentalAnnouncementCreateModel);//RentalAnnouncementCreateModel
             rentalAnnouncement.UserId = userId;
+            rentalAnnouncement.Images = images;
+
             _rentalAnnouncementService.Create(rentalAnnouncement);
 
             return Created("", rentalAnnouncementCreateModel);
@@ -137,5 +151,6 @@ namespace RealEstateAgencyBackend.Controllers
                 return HttpContext.Current.GetOwinContext().Authentication;
             }
         }
+
     }
 }

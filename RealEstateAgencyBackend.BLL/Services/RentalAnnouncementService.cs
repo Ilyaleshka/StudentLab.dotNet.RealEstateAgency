@@ -28,21 +28,28 @@ namespace RealEstateAgencyBackend.BLL.Services
 
         public RentalAnnouncementDto Create(RentalAnnouncementDto rentalAnnouncementDto)
         {
-            RentalAnnouncement rentalAnnouncement = _mapper.Map<RentalAnnouncement>(rentalAnnouncementDto);
+            RentalAnnouncement rentalAnnouncement = _mapper.Map<RentalAnnouncementDto, RentalAnnouncement>(rentalAnnouncementDto);
 
             User user = _userManager.FindById(rentalAnnouncementDto.UserId);
             rentalAnnouncement.User = user;
 
-            _repository.Create(rentalAnnouncement);
+            RentalAnnouncement createdRentalAnnouncement = _repository.Create(rentalAnnouncement);
+
+            foreach (var image in rentalAnnouncementDto.Images)
+            {
+                PostImage postImg = _dal.ImageRepository.Find(image.Id);
+                postImg.RentalAnnouncement = createdRentalAnnouncement;
+            }
+
             _dal.Save();
 
-            return _mapper.Map<RentalAnnouncementDto>(rentalAnnouncement);
+            return _mapper.Map<RentalAnnouncement,RentalAnnouncementDto>(rentalAnnouncement);
         }
 
         public RentalAnnouncementDto Find(int id)
         {
             RentalAnnouncement rentalAnnouncement = _repository.Find(id);
-            RentalAnnouncementDto rentalAnnouncementDto = _mapper.Map<RentalAnnouncementDto>(rentalAnnouncement);
+            RentalAnnouncementDto rentalAnnouncementDto = _mapper.Map<RentalAnnouncement,RentalAnnouncementDto> (rentalAnnouncement);
 
             return rentalAnnouncementDto;
         }
@@ -53,7 +60,7 @@ namespace RealEstateAgencyBackend.BLL.Services
         {
             IEnumerable<RentalAnnouncement> announcements = _repository.GetAll();
 
-            announcements = announcements.Where(announcement => announcement.Reservations
+            announcements = announcements.ToList().Where(announcement => announcement.Reservations
                     .All(reservation => (!reservation.IsActive && reservation.IsConfirmed)));
 
             List<RentalAnnouncementDto> rentalAnnouncementDtos = _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementDto>>(announcements);
@@ -66,17 +73,17 @@ namespace RealEstateAgencyBackend.BLL.Services
             var temp =  _repository.Remove(rentalAnnouncement.Id);
             _dal.Save();
 
-            RentalAnnouncementDto rentalAnnouncementDto = _mapper.Map<RentalAnnouncementDto>(temp);
+            RentalAnnouncementDto rentalAnnouncementDto = _mapper.Map<RentalAnnouncement,RentalAnnouncementDto> (temp);
             return rentalAnnouncementDto;
         }
 
         public RentalAnnouncementDto Update(RentalAnnouncementDto rentalAnnouncementDto)
         {
-            RentalAnnouncement rentalAnnouncement = _mapper.Map<RentalAnnouncement>(rentalAnnouncementDto);
+            RentalAnnouncement rentalAnnouncement = _mapper.Map<RentalAnnouncementDto,RentalAnnouncement >(rentalAnnouncementDto);
             _repository.Update(rentalAnnouncement);
             _dal.Save();
 
-            return _mapper.Map<RentalAnnouncementDto>(rentalAnnouncement);
+            return _mapper.Map<RentalAnnouncement,RentalAnnouncementDto>(rentalAnnouncement);
         }
     }
 }

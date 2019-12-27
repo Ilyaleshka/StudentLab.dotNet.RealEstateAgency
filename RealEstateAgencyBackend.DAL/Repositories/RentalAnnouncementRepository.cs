@@ -18,8 +18,7 @@ namespace RealEstateAgencyBackend.DAL.Repositories
 
         public RentalAnnouncement Create(RentalAnnouncement item)
         {
-            _context.RentalAnnouncements.Add(item);
-            return item;
+            return _context.RentalAnnouncements.Add(item);
         }
 
         public RentalAnnouncement Remove(int id)

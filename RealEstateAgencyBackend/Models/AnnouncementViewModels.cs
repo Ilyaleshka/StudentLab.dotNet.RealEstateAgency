@@ -18,6 +18,8 @@ namespace RealEstateAgencyBackend.Models
         public Int32 Cost { get; set; }
 
         public String Location { get; set; }
+
+        public String[] Base64Images { get; set; }
     }
 
     public class RentalAnnouncementViewModel

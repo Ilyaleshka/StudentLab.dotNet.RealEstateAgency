@@ -20,8 +20,7 @@ namespace RealEstateAgencyBackend.DAL.Repositories
 
         public Reservation Create(Reservation item)
         {
-            _context.Reservations.Add(item);
-            return item;
+            return _context.Reservations.Add(item);
         }
 
         public Reservation Find(int id)

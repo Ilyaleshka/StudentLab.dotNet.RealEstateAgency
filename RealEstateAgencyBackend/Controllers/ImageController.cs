@@ -18,6 +18,33 @@ namespace RealEstateAgencyBackend.Controllers
     public class ImageController : ApiController
     {
 
+        public class ImageList
+        {
+            public List<String> Images { get; set; }
+        }
+
+        [Route("user/SaveBase64Image")]
+        [AllowAnonymous]
+        public IHttpActionResult SaveBase64Image(ImageList images)
+        {
+            foreach (var image in images.Images)
+            {
+                byte[] bytes = Convert.FromBase64String(image);
+
+                using (MemoryStream ms = new MemoryStream(bytes))
+                {
+                    Image img = Image.FromStream(ms);
+                    Debug.WriteLine(img.RawFormat);
+
+                    var filePath = HttpContext.Current.Server.MapPath("~/Public/");
+                    filePath += DateTime.Now.Ticks + ".jpg";// + "." + img.RawFormat.ToString();// + extension;// postedFile.FileName;// + DateTime.Now.Ticks + extension;
+                    img.Save(filePath, ImageFormat.Jpeg);
+                }
+            }
+            return Ok();
+
+        }
+
         [Route("user/PostUserImage")]
         [AllowAnonymous]
         public async Task<HttpResponseMessage> PostUserImage()

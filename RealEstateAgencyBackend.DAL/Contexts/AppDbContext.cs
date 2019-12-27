@@ -9,6 +9,7 @@ namespace RealEstateAgencyBackend.DAL.Contexts
         public DbSet<RentalAnnouncement> RentalAnnouncements { get; set; }
         public DbSet<RentalRequest> RentalRequests { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<PostImage> Images { get; set; }
 
         public AppDbContext() : base("name=IdentityDb") { }
 

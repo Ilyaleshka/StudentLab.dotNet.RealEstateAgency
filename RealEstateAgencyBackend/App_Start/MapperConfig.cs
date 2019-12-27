@@ -23,7 +23,8 @@ namespace RealEstateAgencyBackend
 
 
             config.CreateMap<RentalAnnouncementDto, RentalAnnouncement>();
-            config.CreateMap<RentalAnnouncement, RentalAnnouncementDto>();
+            config.CreateMap<RentalAnnouncement, RentalAnnouncementDto>()
+                .ForMember(r => r.Images,c => c.MapFrom(d => d.PostImages));
             config.CreateMap<RentalAnnouncementCreateModel, RentalAnnouncementDto>();
             config.CreateMap<RentalAnnouncementDto,RentalAnnouncementViewModel>();
 
@@ -40,6 +41,11 @@ namespace RealEstateAgencyBackend
             config.CreateMap<UserDto, UserViewModel>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.UserLastName));
+
+            config.CreateMap<PostImage, ImageDto>();
+            config.CreateMap<ImageDto, PostImage>();
+
+           
         }
     }
 }

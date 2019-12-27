@@ -12,6 +12,8 @@ namespace RealEstateAgencyBackend.DAL.UnitOfWork
 
         IReservationRepository ReservationRepository { get; }
 
+        IImageRepository ImageRepository { get; }
+
         void Save();
     }
 }

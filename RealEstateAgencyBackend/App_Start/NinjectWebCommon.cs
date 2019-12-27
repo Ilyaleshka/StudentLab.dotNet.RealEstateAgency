@@ -53,8 +53,9 @@ namespace RealEstateAgencyBackend
             kernel.Bind<IUserService>().To<UserService>().InRequestScope();
             kernel.Bind<IRentalRequestService>().To<RentalRequestService>().InRequestScope();
             kernel.Bind<IRentalAnnouncementService>().To<RentalAnnouncementService>().InRequestScope();
+            kernel.Bind<IImageService>().To<ImageService>().InRequestScope();
 
-            
+
             var mapperConfiguration = MapperConfig.CreateConfiguration();
             kernel.Bind<MapperConfiguration>().ToConstant(mapperConfiguration).InSingletonScope();
             kernel.Bind<IMapper>().ToMethod(ctx =>
