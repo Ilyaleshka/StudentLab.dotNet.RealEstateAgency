@@ -29,9 +29,9 @@ namespace RealEstateAgencyBackend.BLL.Services
             _mapper = mapper;
         }
 
-        public ImageDto Create(String base64Image, String folderPath)
+        public ImageDto Save(String base64Image, String appFolderPath, String folderPath)
         {
-            String localPath = SaveImage(base64Image, folderPath);
+            String localPath = SaveImage(base64Image, appFolderPath, folderPath);
 
             PostImage postImage = new PostImage
             {
@@ -39,26 +39,37 @@ namespace RealEstateAgencyBackend.BLL.Services
             };
 
             PostImage createdPostImage = _repository.Create(postImage);
-
-            ImageDto imageDto = _mapper.Map<ImageDto>(createdPostImage);
+			_dal.Save();
+			ImageDto imageDto = _mapper.Map<ImageDto>(createdPostImage);
             return imageDto;
         }
 
-        private String SaveImage(String base64String,String folderPath)
+
+		public ImageDto Create(ImageDto image)
+		{
+			PostImage postImage = _mapper.Map<PostImage>(image);
+			PostImage createdPostImage = _repository.Create(postImage);
+			_dal.Save();
+			ImageDto imageDto = _mapper.Map<ImageDto>(createdPostImage);
+			return imageDto;
+		}
+
+		private String SaveImage(String base64String, String appFolderPath, String folderPath)
         {
             byte[] bytes = Convert.FromBase64String(base64String);
-            String filePath = String.Empty;
+            String relativeFilePath = String.Empty;
 
             using (MemoryStream ms = new MemoryStream(bytes))
             {
                 Image img = Image.FromStream(ms);
-
-                filePath = folderPath;
-                filePath += DateTime.Now.Ticks + ".jpg";// + "." + img.RawFormat.ToString();// + extension;// postedFile.FileName;// + DateTime.Now.Ticks + extension;
-                img.Save(filePath, ImageFormat.Jpeg);
+				String fileName = DateTime.Now.Ticks + ".jpg";// + "." + img.RawFormat.ToString();// + extension;// postedFile.FileName;// + DateTime.Now.Ticks + extension;
+				String filePath = Path.Combine(appFolderPath, folderPath, fileName); 
+				//filePath = Path.Combine(filePath,fileName);// + "." + img.RawFormat.ToString();// + extension;// postedFile.FileName;// + DateTime.Now.Ticks + extension;
+				relativeFilePath = Path.Combine(folderPath, fileName);
+				img.Save(filePath, ImageFormat.Jpeg);
             }
 
-            return filePath;
+            return relativeFilePath;
         }
 
         public ImageDto Find(int id)

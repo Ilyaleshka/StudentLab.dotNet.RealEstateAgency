@@ -10,10 +10,16 @@ namespace RealEstateAgencyBackend
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-            config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
-            // Web API routes
-            config.MapHttpAttributeRoutes();
+			// Web API configuration and services
+			var corsAttribute = new EnableCorsAttribute("http://localhost:3000", "*", "*")
+			{
+				SupportsCredentials = true
+			};
+
+			config.EnableCors(corsAttribute);
+			
+															 // Web API routes
+			config.MapHttpAttributeRoutes();
 
 
             /*

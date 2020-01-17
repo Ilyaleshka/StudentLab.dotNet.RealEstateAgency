@@ -37,9 +37,16 @@ namespace RealEstateAgencyBackend.BLL.Services
 
             foreach (var image in rentalAnnouncementDto.Images)
             {
-                PostImage postImg = _dal.ImageRepository.Find(image.Id);
-                postImg.RentalAnnouncement = createdRentalAnnouncement;
-            }
+				PostImage postImage = _mapper.Map<PostImage>(image);
+				PostImage createdPostImage = _dal.ImageRepository.Create(postImage);
+				//ImageDto imageDto = _mapper.Map<ImageDto>(createdPostImage);
+				//return imageDto;
+				createdPostImage.RentalAnnouncement = createdRentalAnnouncement;
+
+				//PostImage postImg = _dal.ImageService.Find(image.Id);
+				//PostImage postImg = _dal.ImageRepository.Find(image.Id);
+				//postImg.RentalAnnouncement = createdRentalAnnouncement;
+			}
 
             _dal.Save();
 

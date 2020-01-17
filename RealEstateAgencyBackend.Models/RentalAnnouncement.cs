@@ -28,5 +28,11 @@ namespace RealEstateAgencyBackend.Models
         public virtual ICollection<Reservation> Reservations { get; set; }
 
         public virtual ICollection<PostImage> PostImages { get; set; }
-    }
+
+		public RentalAnnouncement()
+		{
+			PostImages = new List<PostImage>();
+			Reservations = new List<Reservation>();
+		}
+	}
 }

@@ -20,24 +20,24 @@ namespace RealEstateAgencyBackend.DAL.Repositories
 
         public PostImage Create(PostImage item)
         {
-            return _context.Images.Add(item);
+            return _context.PostImages.Add(item);
         }
 
         public PostImage Find(int id)
         {
-            return _context.Images.Find(id);
+            return _context.PostImages.Find(id);
         }
 
         public IQueryable<PostImage> GetAll()
         {
-            return _context.Images;
+            return _context.PostImages;
         }
 
         public PostImage Remove(int id)
         {
-            PostImage img = _context.Images.Find(id);
+            PostImage img = _context.PostImages.Find(id);
             if (img != null)
-                img = _context.Images.Remove(img);
+                img = _context.PostImages.Remove(img);
             return img;
         }
 

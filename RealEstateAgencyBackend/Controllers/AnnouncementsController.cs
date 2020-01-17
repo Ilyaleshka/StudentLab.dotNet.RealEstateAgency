@@ -66,12 +66,15 @@ namespace RealEstateAgencyBackend.Controllers
                 return BadRequest(ModelState);
             }
 
-            //List<String> images = SaveUserImage();
-            var folderPath = HttpContext.Current.Server.MapPath("~/Public/");
-            ICollection<ImageDto> images = new List<ImageDto>();
+
+            //var folderPath = HttpContext.Current.Server.MapPath("~/Public/");
+			var folderPath = "Public";
+			var appFolderPath = HttpContext.Current.Server.MapPath("~/");
+
+			ICollection<ImageDto> images = new List<ImageDto>();
             foreach (var img in rentalAnnouncementCreateModel.Base64Images)
             {
-                images.Add(_imageService.Create(img, folderPath));
+                images.Add(_imageService.Save(img, appFolderPath ,folderPath));
             }
 
             String userName = AuthManager.User.Identity.Name;

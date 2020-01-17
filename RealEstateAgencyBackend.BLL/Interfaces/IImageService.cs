@@ -18,7 +18,9 @@ namespace RealEstateAgencyBackend.BLL.Interfaces
 
         ImageDto Update(ImageDto postImage);
 
-        ImageDto Create(String base64Image,String folderPath);
+        ImageDto Save(String base64Image,String appFolderPath,String folderPath);
 
-    }
+		ImageDto Create(ImageDto image);
+
+	}
 }
