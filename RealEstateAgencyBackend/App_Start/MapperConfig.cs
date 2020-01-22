@@ -19,14 +19,17 @@ namespace RealEstateAgencyBackend
 
         public static void ConfigMapper(IMapperConfigurationExpression config)
         {
-            string str = ConfigurationManager.AppSettings["hostAddress"].ToString();
+            string str = ConfigurationManager.AppSettings["hostAddress"];
 
+			config.CreateMap<ImageDto, string>()
+				.ConvertUsing(f => str + f.ImagePath);
 
-            config.CreateMap<RentalAnnouncementDto, RentalAnnouncement>();
+			config.CreateMap<RentalAnnouncementDto, RentalAnnouncement>();
             config.CreateMap<RentalAnnouncement, RentalAnnouncementDto>()
                 .ForMember(r => r.Images,c => c.MapFrom(d => d.PostImages));
             config.CreateMap<RentalAnnouncementCreateModel, RentalAnnouncementDto>();
-            config.CreateMap<RentalAnnouncementDto,RentalAnnouncementViewModel>();
+            config.CreateMap<RentalAnnouncementDto,RentalAnnouncementViewModel>()
+				.ForMember(r => r.Images, c => c.MapFrom(d => d.Images)); 
 
             config.CreateMap<RentalRequestDto, RentalRequest>();
             config.CreateMap<RentalRequest, RentalRequestDto>();

@@ -37,7 +37,9 @@ namespace RealEstateAgencyBackend.Models
         public Int32 Cost { get; set; }
 
         public String Location { get; set; }
-    }
+
+		public ICollection<String> Images { get; set; }
+	}
 
     public class RentalAnnouncementReservationViewModel
     {

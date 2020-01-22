@@ -11,6 +11,7 @@ namespace RealEstateAgencyBackend
         public static void Register(HttpConfiguration config)
         {
 			// Web API configuration and services
+			//var corsAttribute = new EnableCorsAttribute("*", "*", "*")
 			var corsAttribute = new EnableCorsAttribute("http://localhost:3000", "*", "*")
 			{
 				SupportsCredentials = true

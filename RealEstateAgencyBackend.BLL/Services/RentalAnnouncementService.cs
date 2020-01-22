@@ -39,18 +39,12 @@ namespace RealEstateAgencyBackend.BLL.Services
             {
 				PostImage postImage = _mapper.Map<PostImage>(image);
 				PostImage createdPostImage = _dal.ImageRepository.Create(postImage);
-				//ImageDto imageDto = _mapper.Map<ImageDto>(createdPostImage);
-				//return imageDto;
 				createdPostImage.RentalAnnouncement = createdRentalAnnouncement;
-
-				//PostImage postImg = _dal.ImageService.Find(image.Id);
-				//PostImage postImg = _dal.ImageRepository.Find(image.Id);
-				//postImg.RentalAnnouncement = createdRentalAnnouncement;
 			}
 
             _dal.Save();
 
-            return _mapper.Map<RentalAnnouncement,RentalAnnouncementDto>(rentalAnnouncement);
+            return _mapper.Map<RentalAnnouncement,RentalAnnouncementDto>(createdRentalAnnouncement);
         }
 
         public RentalAnnouncementDto Find(int id)
@@ -67,8 +61,8 @@ namespace RealEstateAgencyBackend.BLL.Services
         {
             IEnumerable<RentalAnnouncement> announcements = _repository.GetAll();
 
-            announcements = announcements.ToList().Where(announcement => announcement.Reservations
-                    .All(reservation => (!reservation.IsActive && reservation.IsConfirmed)));
+            announcements = announcements.Where(announcement => announcement.Reservations
+                    .All(reservation => ((!reservation.IsActive) && reservation.IsConfirmed))).ToList();
 
             List<RentalAnnouncementDto> rentalAnnouncementDtos = _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementDto>>(announcements);
 

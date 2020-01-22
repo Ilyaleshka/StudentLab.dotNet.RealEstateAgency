@@ -25,12 +25,12 @@ namespace RealEstateAgencyBackend.DAL.Contexts
 
     }
 
-    public class IdentityDbInit : DropCreateDatabaseAlways<AppDbContext>//DropCreateDatabaseIfModelChanges<AppDbContext>
+    public class IdentityDbInit : DropCreateDatabaseIfModelChanges<AppDbContext>//DropCreateDatabaseIfModelChanges<AppDbContext>
     {
         protected override void Seed(AppDbContext context)
         {
-            context.RentalAnnouncements.Add(new RentalAnnouncement() { Title = "title", Description = "description", Area = 50, Address = "Minsk", Cost = 100, Location = "location" });
-            context.RentalAnnouncements.Add(new RentalAnnouncement() { Title = "title", Description = "description2", Area = 50, Address = "Minsk", Cost = 100, Location = "location2" });
+            context.RentalAnnouncements.Add(new RentalAnnouncement() { Title = "title", Description = "description", Area = 50, Address = "Minsk", Cost = 100, Location = "[53.92151574097754,27.513263352237598]" });
+            context.RentalAnnouncements.Add(new RentalAnnouncement() { Title = "title", Description = "description2", Area = 50, Address = "Minsk", Cost = 100, Location = "[53.92151574097754,27.513263352237598]" });
 
             context.RentalRequests.Add(new RentalRequest() { Title = "title", Area = 50, PrefferedAddress = "Minsk", MaxPrice = 100 });
             context.RentalRequests.Add(new RentalRequest() { Title = "title2", Area = 150, PrefferedAddress = "Grodno", MaxPrice = 1000 });

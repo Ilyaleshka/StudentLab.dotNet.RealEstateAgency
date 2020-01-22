@@ -19,7 +19,6 @@ using RealEstateAgencyBackend.Models;
 
 namespace RealEstateAgencyBackend.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class RequestsController : ApiController
     {
         private IRentalRequestService _rentalRequestService;
