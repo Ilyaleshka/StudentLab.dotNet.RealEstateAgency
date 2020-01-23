@@ -65,8 +65,26 @@ namespace RealEstateAgencyBackend.Controllers
         }
 
 
+		[Route("api/account/info")]
+		[HttpGet]
+		public IHttpActionResult Info()
+		{
 
-        [Route("api/account/logout")]
+			String userName = AuthManager.User.Identity.Name;
+			String userId = _userService.GetUserId(userName);
+			UserDto user = _userService.FindById(userId);
+
+			if (user == null)
+			{
+				return BadRequest("You are not authorized");
+			}
+
+			return Ok(_mapper.Map<UserViewModel>(user));
+		}
+
+
+
+		[Route("api/account/logout")]
         [HttpPost]
         public IHttpActionResult Logout()
         {

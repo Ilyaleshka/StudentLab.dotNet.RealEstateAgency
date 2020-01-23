@@ -13,10 +13,6 @@ namespace RealEstateAgencyBackend.Controllers
         public ActionResult Index()
         {
             ViewBag.Title = "Home Page";
-            var y = System.Web.HttpContext.Current.Request.ServerVariables["LOCAL_ADDR"];
-            var x = System.Web.HttpContext.Current.Request.ServerVariables["SERVER_NAME"];
-            var z = System.Web.HttpContext.Current.Request.ServerVariables["SERVER_PORT"];
-            Debug.WriteLine(y + "|" + x + "|" + z);
             return View();
         }
 

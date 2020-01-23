@@ -1,5 +1,7 @@
 ﻿using RealEstateAgencyBackend.BLL.DTO;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace RealEstateAgencyBackend.BLL.Interfaces
 {
@@ -7,7 +9,11 @@ namespace RealEstateAgencyBackend.BLL.Interfaces
     {
         IEnumerable<RentalAnnouncementDto> GetAll();
 
-        RentalAnnouncementDto Find(int id);
+        IEnumerable<RentalAnnouncementDto> GetPageWithFilters(Int32 pageNumber, Int32 pageSize, NameValueCollection filteringParams);
+
+		Int32 GetPageCount(NameValueCollection filteringParams);
+
+		RentalAnnouncementDto Find(int id);
 
         RentalAnnouncementDto Remove(RentalAnnouncementDto rentalAnnouncement);
 

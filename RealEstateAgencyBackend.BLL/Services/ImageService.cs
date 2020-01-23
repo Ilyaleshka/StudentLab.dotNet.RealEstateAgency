@@ -69,7 +69,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 				img.Save(filePath, ImageFormat.Jpeg);
             }
 
-            return relativeFilePath;
+            return relativeFilePath.Replace("\\", "/");
         }
 
         public ImageDto Find(int id)
