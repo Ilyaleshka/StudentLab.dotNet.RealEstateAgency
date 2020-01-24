@@ -36,4 +36,11 @@ namespace RealEstateAgencyBackend.Models
 
         public String UserId { get; set; }
     }
+
+	public class RentalRequestPageView
+	{
+		public List<RentalRequestViewModel> RentalRequests { get; set; }
+		public Int32 PageCount { get; set; }
+		public Int32 CurrentPage { get; set; }
+	}
 }

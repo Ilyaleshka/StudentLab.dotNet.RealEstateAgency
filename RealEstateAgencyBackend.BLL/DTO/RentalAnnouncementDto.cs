@@ -48,4 +48,12 @@ namespace RealEstateAgencyBackend.BLL.DTO
 
         public ICollection<ImageDto> Images { get; set; }
     }
+
+
+	public class RentalAnnouncementPageDto
+	{
+		public List<RentalAnnouncementDto> RentalAnnouncements { get; set; }
+		public Int32 PageCount { get; set; }
+		public Int32 CurrentPage { get; set; }
+	}
 }

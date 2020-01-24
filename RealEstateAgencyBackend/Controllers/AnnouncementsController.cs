@@ -32,32 +32,12 @@ namespace RealEstateAgencyBackend.Controllers
 
         [HttpGet]
         [Route("api/announcements")]
-        public IEnumerable<RentalAnnouncementViewModel> GetRentalAnnouncements(int page,int pageSize)
+        public RentalAnnouncementPageView GetRentalAnnouncements(int page,int pageSize)
         {
-			//if(Request.QueryString.)
-			IEnumerable<RentalAnnouncementDto> announcements;
-			if (HttpContext.Current.Request.QueryString.Count > 0)
-			{
-				NameValueCollection filteringParams = HttpContext.Current.Request.QueryString;
-
-				announcements = _rentalAnnouncementService.GetPageWithFilters(page, pageSize,filteringParams);
-			}
-			else 
-			{
-				announcements = _rentalAnnouncementService.GetAll();
-			}
-            IEnumerable<RentalAnnouncementViewModel> results = _mapper.Map<IEnumerable<RentalAnnouncementDto>, IEnumerable<RentalAnnouncementViewModel>>(announcements);
+			RentalAnnouncementPageDto announcements = _rentalAnnouncementService.GetPageWithFilters(page, pageSize, HttpContext.Current.Request.QueryString);
+            RentalAnnouncementPageView results = _mapper.Map<RentalAnnouncementPageView>(announcements);
             return results;
         }
-
-		[HttpGet]
-		[Route("api/announcements/count")]
-		public Int32 GetRentalAnnouncementsCount()
-		{
-			NameValueCollection filteringParams = HttpContext.Current.Request.QueryString;
-			Int32 announcementsCount = _rentalAnnouncementService.GetPageCount(filteringParams);
-			return announcementsCount;
-		}
 
 
 		[HttpGet]

@@ -22,4 +22,11 @@ namespace RealEstateAgencyBackend.BLL.DTO
 
         public String UserId { get; set; }
     }
+
+	public class RentalRequestPageDto
+	{
+		public List<RentalRequestDto> RentalRequests { get; set; }
+		public Int32 PageCount { get; set; }
+		public Int32 CurrentPage { get; set; }
+	}
 }

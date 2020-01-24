@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using RealEstateAgencyBackend.BLL.DTO;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Specialized;
 
 namespace RealEstateAgencyBackend.BLL.Services
 {
@@ -56,7 +58,45 @@ namespace RealEstateAgencyBackend.BLL.Services
             return rentalRequestDtos;
         }
 
-        public RentalRequestDto Remove(RentalRequestDto rentalRequest)
+		public RentalRequestPageDto GetPageWithFilters(Int32 pageNumber, Int32 pageSize, NameValueCollection filteringParams)
+		{
+			Int32 maxCost, minCost, maxArea, minArea;
+			try
+			{
+				maxCost = String.IsNullOrEmpty(filteringParams["maxCost"]) ? Int32.MaxValue : Int32.Parse(filteringParams["maxCost"]);
+				minCost = String.IsNullOrEmpty(filteringParams["minCost"]) ? 0 : Int32.Parse(filteringParams["minCost"]);
+				maxArea = String.IsNullOrEmpty(filteringParams["maxArea"]) ? Int32.MaxValue : Int32.Parse(filteringParams["maxArea"]);
+				minArea = String.IsNullOrEmpty(filteringParams["minArea"]) ? 0 : Int32.Parse(filteringParams["minArea"]);
+			}
+			catch
+			{
+				throw new ArgumentException("Invalid filter parameter");
+			}
+
+			IQueryable<RentalRequest> requests = _repository.GetAll();
+
+			requests = requests.Where(request =>
+						(request.MaxPrice >= minCost && request.MaxPrice <= maxCost)
+					&& (request.Area >= minArea && request.Area <= maxArea));
+
+			int skip = (pageNumber - 1) * pageSize;
+			Int32 requestCount = (int)Math.Ceiling(requests.Count() / (float)pageSize);
+			requests = requests.OrderByDescending(g => g.Id).Skip(skip).Take(pageSize);
+
+
+			List<RentalRequestDto> rentalRequestDtos = _mapper.Map<IEnumerable<RentalRequest>, List<RentalRequestDto>>(requests);
+
+			RentalRequestPageDto rentalRequestPageDto = new RentalRequestPageDto
+			{
+				CurrentPage = pageNumber,
+				PageCount = requestCount,
+				RentalRequests = rentalRequestDtos
+			};
+
+			return rentalRequestPageDto;
+		}
+
+		public RentalRequestDto Remove(RentalRequestDto rentalRequest)
         {
             var temp = _repository.Remove(rentalRequest.Id);
             _dal.Save();

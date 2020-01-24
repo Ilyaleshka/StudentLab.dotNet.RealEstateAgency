@@ -57,4 +57,11 @@ namespace RealEstateAgencyBackend.Models
 
         public String Location { get; set; }
     }
+
+	public class RentalAnnouncementPageView
+	{
+		public List<RentalAnnouncementViewModel> RentalAnnouncements { get; set; }
+		public Int32 PageCount { get; set; }
+		public Int32 CurrentPage { get; set; }
+	}
 }

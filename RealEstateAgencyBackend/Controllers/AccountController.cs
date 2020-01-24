@@ -89,7 +89,7 @@ namespace RealEstateAgencyBackend.Controllers
         public IHttpActionResult Logout()
         {
             if (AuthManager.User != null)            
-                AuthManager.SignOut();
+                AuthManager.SignOut(Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ApplicationCookie);
             return Ok(); 
         }
 

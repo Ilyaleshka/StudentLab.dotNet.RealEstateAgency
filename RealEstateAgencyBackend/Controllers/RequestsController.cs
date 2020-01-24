@@ -55,12 +55,15 @@ namespace RealEstateAgencyBackend.Controllers
 
         [HttpGet]
         [Route("api/requests")]
-        public IEnumerable<RentalRequestViewModel> GetRentalRequests()
+        public RentalRequestPageView GetRentalRequests(Int32 page,Int32 pageSize)
         {
-            var announcements = _rentalRequestService.GetAll();
-            IEnumerable<RentalRequestViewModel> results = _mapper.Map<IEnumerable<RentalRequestDto>, IEnumerable<RentalRequestViewModel>>(announcements);
-            return results;
-        }
+			RentalRequestPageDto announcements = _rentalRequestService.GetPageWithFilters(page, pageSize, HttpContext.Current.Request.QueryString);
+			RentalRequestPageView results = _mapper.Map<RentalRequestPageView>(announcements);
+			return results;
+			//var announcements = _rentalRequestService.GetAll();
+			//IEnumerable<RentalRequestViewModel> results = _mapper.Map<IEnumerable<RentalRequestDto>, IEnumerable<RentalRequestViewModel>>(announcements);
+			//return results;
+		}
 
         // GET: api/RentalAnnouncements/5
         [HttpGet]

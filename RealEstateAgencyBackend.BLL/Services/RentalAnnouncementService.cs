@@ -71,7 +71,7 @@ namespace RealEstateAgencyBackend.BLL.Services
             return rentalAnnouncementDtos;
         }
 
-		public IEnumerable<RentalAnnouncementDto> GetPageWithFilters(Int32 pageNumber, Int32 pageSize, NameValueCollection filteringParams)
+		public RentalAnnouncementPageDto GetPageWithFilters(Int32 pageNumber, Int32 pageSize, NameValueCollection filteringParams)
 		{
 			Int32 maxCost, minCost, maxArea, minArea;
 			try
@@ -94,36 +94,20 @@ namespace RealEstateAgencyBackend.BLL.Services
 					&& announcement.Reservations.All(reservation => ((!reservation.IsActive) && reservation.IsConfirmed)));
 
 			int skip = (pageNumber - 1) * pageSize;
+			Int32 announcementCount = (int)Math.Ceiling(announcements.Count() / (float)pageSize);
 			announcements = announcements.OrderByDescending(g => g.Id).Skip(skip).Take(pageSize);
+
 
 			List<RentalAnnouncementDto> rentalAnnouncementDtos = _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementDto>>(announcements);
 
-			return rentalAnnouncementDtos;
-		}
-
-		public Int32 GetPageCount(NameValueCollection filteringParams)
-		{
-			Int32 maxCost, minCost, maxArea, minArea;
-			try
+			RentalAnnouncementPageDto rentalAnnouncementPageDto = new RentalAnnouncementPageDto
 			{
-				maxCost = String.IsNullOrEmpty(filteringParams["maxCost"]) ? Int32.MaxValue : Int32.Parse(filteringParams["maxCost"]);
-				minCost = String.IsNullOrEmpty(filteringParams["minCost"]) ? 0 : Int32.Parse(filteringParams["minCost"]);
-				maxArea = String.IsNullOrEmpty(filteringParams["maxArea"]) ? Int32.MaxValue : Int32.Parse(filteringParams["maxArea"]);
-				minArea = String.IsNullOrEmpty(filteringParams["minArea"]) ? 0 : Int32.Parse(filteringParams["minArea"]);
-			}
-			catch
-			{
-				throw new ArgumentException("Invalid filter parameter");
-			}
+				CurrentPage = pageNumber,
+				PageCount = announcementCount,
+				RentalAnnouncements = rentalAnnouncementDtos
+			};
 
-			IQueryable<RentalAnnouncement> announcements = _repository.GetAll();
-
-			Int32 announcementCount = announcements.Where(announcement =>
-						(announcement.Cost >= minCost && announcement.Cost <= maxCost)
-					&& (announcement.Area >= minArea && announcement.Area <= maxArea)
-					&& announcement.Reservations.All(reservation => ((!reservation.IsActive) && reservation.IsConfirmed))).Count();
-
-			return announcementCount;
+			return rentalAnnouncementPageDto;
 		}
 
 		public RentalAnnouncementDto Remove(RentalAnnouncementDto rentalAnnouncement)

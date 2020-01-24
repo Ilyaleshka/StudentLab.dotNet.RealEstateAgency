@@ -24,6 +24,9 @@ namespace RealEstateAgencyBackend
 			config.CreateMap<ImageDto, string>()
 				.ConvertUsing(f => str + f.ImagePath);
 
+			config.CreateMap<RentalAnnouncementPageDto, RentalAnnouncementPageView>();
+			config.CreateMap<RentalRequestPageDto, RentalRequestPageView>();
+
 			config.CreateMap<RentalAnnouncementDto, RentalAnnouncement>();
             config.CreateMap<RentalAnnouncement, RentalAnnouncementDto>()
                 .ForMember(r => r.Images,c => c.MapFrom(d => d.PostImages));

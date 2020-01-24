@@ -9,9 +9,7 @@ namespace RealEstateAgencyBackend.BLL.Interfaces
     {
         IEnumerable<RentalAnnouncementDto> GetAll();
 
-        IEnumerable<RentalAnnouncementDto> GetPageWithFilters(Int32 pageNumber, Int32 pageSize, NameValueCollection filteringParams);
-
-		Int32 GetPageCount(NameValueCollection filteringParams);
+		RentalAnnouncementPageDto GetPageWithFilters(Int32 pageNumber, Int32 pageSize, NameValueCollection filteringParams);
 
 		RentalAnnouncementDto Find(int id);
 
