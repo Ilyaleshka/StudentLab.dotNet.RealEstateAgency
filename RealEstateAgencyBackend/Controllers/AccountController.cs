@@ -66,7 +66,7 @@ namespace RealEstateAgencyBackend.Controllers
 
 
 		[Route("api/account/info")]
-		[HttpGet]
+		[HttpPost]
 		public IHttpActionResult Info()
 		{
 
