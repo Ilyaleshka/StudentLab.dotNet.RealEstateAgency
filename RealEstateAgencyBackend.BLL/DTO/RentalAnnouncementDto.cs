@@ -47,6 +47,8 @@ namespace RealEstateAgencyBackend.BLL.DTO
         public String UserId { get; set; }
 
         public ICollection<ImageDto> Images { get; set; }
+
+		public ReservationDto Reservation { get; set; }
     }
 
 

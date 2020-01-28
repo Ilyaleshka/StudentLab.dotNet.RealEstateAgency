@@ -27,6 +27,11 @@ namespace RealEstateAgencyBackend
 			config.CreateMap<RentalAnnouncementPageDto, RentalAnnouncementPageView>();
 			config.CreateMap<RentalRequestPageDto, RentalRequestPageView>();
 
+			config.CreateMap<Reservation, ReservationDto>();
+
+			config.CreateMap<RentalAnnouncement, RentalAnnouncementReservationDto>()
+				.ForMember(r => r.Reservation, c => c.MapFrom(d => d.Reservations.AsEnumerable().Where(r => (r.IsConfirmed && r.IsActive)|| ((!r.IsConfirmed) && (!r.IsActive))).FirstOrDefault()))
+				.ForMember(r => r.Images, c => c.MapFrom(d => d.PostImages));
 			config.CreateMap<RentalAnnouncementDto, RentalAnnouncement>();
             config.CreateMap<RentalAnnouncement, RentalAnnouncementDto>()
                 .ForMember(r => r.Images,c => c.MapFrom(d => d.PostImages));

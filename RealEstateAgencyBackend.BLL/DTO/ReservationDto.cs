@@ -12,11 +12,9 @@ namespace RealEstateAgencyBackend.BLL.DTO
 
         public bool IsConfirmed { get; set; }
 
+		public bool IsRejected { get; set; }
+
         public bool IsActive { get; set; }
-
-        public DateTime? EndTime { get; set; }
-
-        public DateTime ReservationTime { get; set; }
 
         public int RentalAnnouncementId { get; set; }
 

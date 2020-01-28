@@ -91,7 +91,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 			announcements = announcements.Where(announcement => 
 						(announcement.Cost >= minCost && announcement.Cost <= maxCost)
 					&& (announcement.Area >= minArea && announcement.Area <= maxArea)
-					&& announcement.Reservations.All(reservation => ((!reservation.IsActive) && reservation.IsConfirmed)));
+					&& announcement.Reservations.All(reservation => ((!reservation.IsActive) && (reservation.IsConfirmed)) || ((!reservation.IsRejected) && (reservation.IsConfirmed))));
 
 			int skip = (pageNumber - 1) * pageSize;
 			Int32 announcementCount = (int)Math.Ceiling(announcements.Count() / (float)pageSize);

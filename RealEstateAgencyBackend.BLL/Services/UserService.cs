@@ -90,22 +90,6 @@ namespace RealEstateAgencyBackend.BLL.Services
             return _userManager.CreateIdentity(user, authenticationTypes);
         }
 
-
-
-        public IEnumerable<RentalAnnouncementDto> GetRentalAnnouncements(string id)
-        {
-            User user = _userManager.FindById(id);
-            return _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementDto>>(user.RentalAnnouncements);
-
-        }
-
-        public IEnumerable<RentalRequestDto> GetRentalRequests(string id)
-        {
-            User user = _userManager.FindById(id);
-            return _mapper.Map<IEnumerable<RentalRequest>, List<RentalRequestDto>>(user.RentalRequests);
-        }
-
-
         public bool IsUserExist(string userName)
         {
             return (_userManager.FindByName(userName) == null) ? false : true;
@@ -117,20 +101,42 @@ namespace RealEstateAgencyBackend.BLL.Services
             return _userManager.FindByName(userName)?.Id;
         }
 
-        public IEnumerable<RentalAnnouncementDto> GetReservations(string userId)
-        {
-            User user = _userManager.FindById(userId);
-            List<RentalAnnouncement> rentalAnnouncements = new List<RentalAnnouncement>(user.RentalAnnouncements);
 
-            return _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementDto>>(rentalAnnouncements.Where(a => a.Reservations.Any(r => r.IsActive)));
-        }
+
+		public IEnumerable<RentalAnnouncementReservationDto> GetRentalAnnouncements(string id)
+		{
+			User user = _userManager.FindById(id);
+			return _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementReservationDto>>(user.RentalAnnouncements);
+		}
+
+
+		public IEnumerable<RentalRequestDto> GetRentalRequests(string id)
+		{
+			User user = _userManager.FindById(id);
+			return _mapper.Map<IEnumerable<RentalRequest>, List<RentalRequestDto>>(user.RentalRequests);
+		}
+
+
+		public IEnumerable<RentalAnnouncementReservationDto> GetReservations(string userId)
+		{
+			User user = _userManager.FindById(userId);
+			var reservations = _dal.RentalAnnouncementRepository.GetAll()
+				.Where(announcement => (announcement.Reservations.Count > 0) && announcement.Reservations.Any(reservation => (reservation.UserId == userId)
+							&&((!reservation.IsActive && !reservation.IsConfirmed) || (reservation.IsActive && reservation.IsConfirmed))));
+			List<RentalAnnouncement> userReservations = new List<RentalAnnouncement>(reservations);
+
+			return _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementReservationDto>>(userReservations);
+		}
+
+
+
 
         public bool ReserveAnnouncement(int announcementId, string userId)
         {
             User user = _userManager.FindById(userId);
             RentalAnnouncement rentalAnnouncement = _dal.RentalAnnouncementRepository.Find(announcementId);
 
-            if (user == null || rentalAnnouncement == null || rentalAnnouncement.Reservations.Any(r => r.IsActive))
+            if (user == null || rentalAnnouncement == null || rentalAnnouncement.Reservations.Any(r => r.IsActive || (!r.IsActive && !r.IsConfirmed)) )
                 return false;
 
             Reservation reservation = new Reservation
@@ -148,13 +154,17 @@ namespace RealEstateAgencyBackend.BLL.Services
             return true;
         }
 
-        public void UnreserveAnnouncement(int announcementId, string userId)
+        public void CompliteReservation(int announcementId, string userId)
         {
             IEnumerable<Reservation> reservs = _dal.ReservationRepository.GetAll()
-                .Where(res => res.UserId == userId && res.RentalAnnouncementId == announcementId && (res.IsActive || (!res.IsConfirmed)));
+                .Where(res => (res.UserId == userId) && (res.RentalAnnouncementId == announcementId) && (res.IsActive && res.IsConfirmed));
 
-            if (reservs.Any())
-                reservs.First().IsActive = false;
+			if (reservs.Any())
+			{
+				var reserv = reservs.First();
+				reserv.IsActive = false;
+				reserv.EndTime = DateTime.Now;
+			}
 
             _dal.Save();
         }
@@ -162,15 +172,32 @@ namespace RealEstateAgencyBackend.BLL.Services
         public void ConfirmReservation(int announcementId, string ownerId)
         {
             IEnumerable<Reservation> reservs = _dal.ReservationRepository.GetAll()
-                .Where(res => res.RentalAnnouncement.UserId == ownerId && res.RentalAnnouncementId == announcementId && (!res.IsConfirmed));
+                .Where(res => res.RentalAnnouncement.UserId == ownerId && res.RentalAnnouncementId == announcementId && (!res.IsConfirmed && !res.IsRejected));
 
-            if (reservs.Any())
-                reservs.First().IsConfirmed = true;
+			if (reservs.Any())
+			{
+				var reserv = reservs.First();
+				reserv.IsConfirmed = true;
+			}
 
-            _dal.Save();
+			_dal.Save();
         }
 
-        public void DeleteReservation(int announcementId, string ownerId)
+		public void RejectReservation(int announcementId, string ownerId)
+		{
+			IEnumerable<Reservation> reservs = _dal.ReservationRepository.GetAll()
+				.Where(res => (res.RentalAnnouncement.UserId == ownerId) && (res.RentalAnnouncementId == announcementId) && (!res.IsConfirmed && !res.IsRejected));
+
+			if (reservs.Any())
+			{
+				var reserv = reservs.First();
+				reserv.IsRejected = true;
+			}
+
+			_dal.Save();
+		}
+
+		public void DeleteReservation(int announcementId, string ownerId)
         {
             IEnumerable<Reservation> reservs = _dal.ReservationRepository.GetAll()
                 .Where(res => res.RentalAnnouncement.UserId == ownerId && res.RentalAnnouncementId == announcementId && (res.IsActive));

@@ -24,19 +24,20 @@ namespace RealEstateAgencyBackend.BLL.Interfaces
         ClaimsIdentity CreateIdentity(string userName, string password, string authenticationTypes);
 
 
-        IEnumerable<RentalAnnouncementDto> GetRentalAnnouncements(string userId);
+        IEnumerable<RentalAnnouncementReservationDto> GetRentalAnnouncements(string userId);
 
         IEnumerable<RentalRequestDto> GetRentalRequests(string userId);
 
-        IEnumerable<RentalAnnouncementDto> GetReservations(string userId);
+        IEnumerable<RentalAnnouncementReservationDto> GetReservations(string userId);
 
 
         bool ReserveAnnouncement(int announcementId, string userId);
 
-        void UnreserveAnnouncement(int announcementId, string userId);
+        void CompliteReservation(int announcementId, string userId);
 
+		void RejectReservation(int announcementId, string ownerId);
 
-        void ConfirmReservation(int announcementId, string userId);
+		void ConfirmReservation(int announcementId, string userId);
 
         void DeleteReservation(int announcementId, string userId);
     }

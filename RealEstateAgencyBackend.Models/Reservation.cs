@@ -15,7 +15,9 @@ namespace RealEstateAgencyBackend.Models
 
         public bool IsConfirmed { get; set; }
 
-        public bool IsActive { get; set; }
+		public bool IsRejected { get; set; }
+
+		public bool IsActive { get; set; }
 
         public DateTime? EndTime { get; set; }
 

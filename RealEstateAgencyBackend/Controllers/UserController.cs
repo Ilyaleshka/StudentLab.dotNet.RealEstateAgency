@@ -27,14 +27,14 @@ namespace RealEstateAgencyBackend.Controllers
         {
             String userName = AuthManager.User.Identity.Name;
             String userId = _userService.GetUserId(userName);
-            IEnumerable<RentalAnnouncementDto> rentalAnnouncements = null;
+            IEnumerable<RentalAnnouncementReservationDto> rentalAnnouncements = null;
             if (userId != null)
                 rentalAnnouncements = _userService.GetRentalAnnouncements(userId);
             return Ok(rentalAnnouncements);
         }
 
         [Route("api/profile/requests")]
-        [HttpGet]
+        [HttpPost]
         public IHttpActionResult Requests()
         {
             String userName = AuthManager.User.Identity.Name;
@@ -45,15 +45,69 @@ namespace RealEstateAgencyBackend.Controllers
             return Ok(rentalRequests);
         }
 
+
         [Route("api/profile/reservations")]
-        [HttpGet]
+        [HttpPost]
         public IHttpActionResult Reservations()
         {
+			String userName = AuthManager.User.Identity.Name;
+			String userId = _userService.GetUserId(userName);
+			IEnumerable<RentalAnnouncementReservationDto> rentalAnnouncements = null;
+			if (userId != null)
+				rentalAnnouncements = _userService.GetReservations(userId);
+			return Ok(rentalAnnouncements);
+		}
 
-            return Ok();
-        }
+		[HttpPost]
+		[Route("api/profile/reservations/:announcementId/reserve")]
+		public IHttpActionResult ReserveAnnouncement(Int32 announcementId)
+		{
+			String userName = AuthManager.User.Identity.Name;
+			String userId = _userService.GetUserId(userName);
+			if (userId != null)
+				_userService.ReserveAnnouncement(announcementId, userId);
+			return Ok();
+		}
 
-        private IAuthenticationManager AuthManager
+
+		[HttpPost]
+		[Route("api/profile/reservations/:announcementId/accept")]
+		public IHttpActionResult AcceptReservation(Int32 announcementId)
+		{
+			String userName = AuthManager.User.Identity.Name;
+			String userId = _userService.GetUserId(userName);
+			if (userId != null)
+				_userService.ConfirmReservation(announcementId,userId);
+			return Ok();
+		}
+
+
+		[HttpPost]
+		[Route("api/profile/reservations/:announcementId/reject")]
+		public IHttpActionResult RejectReservations(Int32 announcementId)
+		{
+			String userName = AuthManager.User.Identity.Name;
+			String userId = _userService.GetUserId(userName);
+			if (userId != null)
+				_userService.RejectReservation(announcementId, userId);
+			return Ok();
+		}
+
+
+		[HttpPost]
+		[Route("api/profile/reservations/:announcementId/complite")]
+		public IHttpActionResult CompliteReservations(Int32 announcementId)
+		{
+			String userName = AuthManager.User.Identity.Name;
+			String userId = _userService.GetUserId(userName);
+			if (userId != null)
+				_userService.CompliteReservation(announcementId, userId);
+			return Ok();
+		}
+
+
+
+		private IAuthenticationManager AuthManager
         {
             get
             {
