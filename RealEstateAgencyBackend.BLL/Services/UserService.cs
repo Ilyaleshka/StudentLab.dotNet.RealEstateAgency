@@ -122,7 +122,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 			User user = _userManager.FindById(userId);
 			var reservations = _dal.RentalAnnouncementRepository.GetAll()
 				.Where(announcement => (announcement.Reservations.Count > 0) && announcement.Reservations.Any(reservation => (reservation.UserId == userId)
-							&&((!reservation.IsActive && !reservation.IsConfirmed) || (reservation.IsActive && reservation.IsConfirmed))));
+							&&((!reservation.IsActive && !reservation.IsConfirmed && !reservation.IsRejected)  || (reservation.IsActive && reservation.IsConfirmed))));
 			List<RentalAnnouncement> userReservations = new List<RentalAnnouncement>(reservations);
 
 			return _mapper.Map<IEnumerable<RentalAnnouncement>, List<RentalAnnouncementReservationDto>>(userReservations);
@@ -136,7 +136,7 @@ namespace RealEstateAgencyBackend.BLL.Services
             User user = _userManager.FindById(userId);
             RentalAnnouncement rentalAnnouncement = _dal.RentalAnnouncementRepository.Find(announcementId);
 
-            if (user == null || rentalAnnouncement == null || rentalAnnouncement.Reservations.Any(r => r.IsActive || (!r.IsActive && !r.IsConfirmed)) )
+            if (user == null || rentalAnnouncement == null || rentalAnnouncement.Reservations.Any(r => r.IsActive || (!r.IsActive && !r.IsConfirmed && !r.IsRejected)) )
                 return false;
 
             Reservation reservation = new Reservation
@@ -157,7 +157,7 @@ namespace RealEstateAgencyBackend.BLL.Services
         public void CompliteReservation(int announcementId, string userId)
         {
             IEnumerable<Reservation> reservs = _dal.ReservationRepository.GetAll()
-                .Where(res => (res.UserId == userId) && (res.RentalAnnouncementId == announcementId) && (res.IsActive && res.IsConfirmed));
+                .Where(res => (res.RentalAnnouncement.UserId == userId) && (res.RentalAnnouncementId == announcementId) && (res.IsActive && res.IsConfirmed));
 
 			if (reservs.Any())
 			{
@@ -178,6 +178,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 			{
 				var reserv = reservs.First();
 				reserv.IsConfirmed = true;
+				reserv.IsActive = true;
 			}
 
 			_dal.Save();
@@ -186,7 +187,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 		public void RejectReservation(int announcementId, string ownerId)
 		{
 			IEnumerable<Reservation> reservs = _dal.ReservationRepository.GetAll()
-				.Where(res => (res.RentalAnnouncement.UserId == ownerId) && (res.RentalAnnouncementId == announcementId) && (!res.IsConfirmed && !res.IsRejected));
+				.Where(res => (res.RentalAnnouncement.UserId == ownerId) && (res.RentalAnnouncementId == announcementId) && (!res.IsConfirmed && !res.IsRejected && !res.IsRejected));
 
 			if (reservs.Any())
 			{

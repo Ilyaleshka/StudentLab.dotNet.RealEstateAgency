@@ -41,7 +41,7 @@ namespace RealEstateAgencyBackend.Controllers
 
 
 		[HttpGet]
-        [Route("api/announcements/{id}")]
+        [Route("api/announcements/{id:int}")]
         [ResponseType(typeof(RentalAnnouncementViewModel))]
         public IHttpActionResult GetRentalAnnouncement(int id)
         {
@@ -139,7 +139,7 @@ namespace RealEstateAgencyBackend.Controllers
 
             RentalAnnouncementDto announcement = _rentalAnnouncementService.Find(id);
 
-            if (announcement.UserId != userId)
+            if (announcement == null || announcement.UserId != userId)
                 return NotFound();
 
             RentalAnnouncementDto deletedAnnouncement = _rentalAnnouncementService.Remove(announcement);

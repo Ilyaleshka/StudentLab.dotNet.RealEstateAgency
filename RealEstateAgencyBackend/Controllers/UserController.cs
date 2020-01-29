@@ -59,7 +59,7 @@ namespace RealEstateAgencyBackend.Controllers
 		}
 
 		[HttpPost]
-		[Route("api/profile/reservations/:announcementId/reserve")]
+		[Route("api/profile/reservations/{announcementId:int}/reserve")]
 		public IHttpActionResult ReserveAnnouncement(Int32 announcementId)
 		{
 			String userName = AuthManager.User.Identity.Name;
@@ -71,7 +71,7 @@ namespace RealEstateAgencyBackend.Controllers
 
 
 		[HttpPost]
-		[Route("api/profile/reservations/:announcementId/accept")]
+		[Route("api/profile/reservations/{announcementId:int}/accept")]
 		public IHttpActionResult AcceptReservation(Int32 announcementId)
 		{
 			String userName = AuthManager.User.Identity.Name;
@@ -83,7 +83,7 @@ namespace RealEstateAgencyBackend.Controllers
 
 
 		[HttpPost]
-		[Route("api/profile/reservations/:announcementId/reject")]
+		[Route("api/profile/reservations/{announcementId:int}/reject")]
 		public IHttpActionResult RejectReservations(Int32 announcementId)
 		{
 			String userName = AuthManager.User.Identity.Name;
@@ -95,7 +95,7 @@ namespace RealEstateAgencyBackend.Controllers
 
 
 		[HttpPost]
-		[Route("api/profile/reservations/:announcementId/complite")]
+		[Route("api/profile/reservations/{announcementId:int}/complite")]
 		public IHttpActionResult CompliteReservations(Int32 announcementId)
 		{
 			String userName = AuthManager.User.Identity.Name;
