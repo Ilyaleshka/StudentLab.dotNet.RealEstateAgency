@@ -36,6 +36,7 @@ namespace RealEstateAgencyBackend.Controllers
         [Authorize]
         [Route("api/requests/create")]
         [HttpPost]
+        // you can return RentalRequestViewModel and same thing is other controllers
         public IHttpActionResult Create(RentalRequestCreateViewModel rentalRequestCreateModel)
         {
             if (!ModelState.IsValid)

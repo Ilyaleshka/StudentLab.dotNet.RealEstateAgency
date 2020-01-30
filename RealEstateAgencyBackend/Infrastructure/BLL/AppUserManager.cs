@@ -17,6 +17,7 @@ namespace RealEstateAgencyBackend.BLL
             : base(store)
         { }
 
+        // That's fine for now but I'm sure you can implement it without importing DAL into Web layer
         public static AppUserManager Create(IdentityFactoryOptions<AppUserManager> options,
             IOwinContext context)
         {

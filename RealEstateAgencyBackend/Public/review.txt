@@ -1,0 +1,1 @@
+Ignore uploaded images in git

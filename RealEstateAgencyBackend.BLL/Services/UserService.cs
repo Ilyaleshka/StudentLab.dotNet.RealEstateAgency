@@ -29,6 +29,7 @@ namespace RealEstateAgencyBackend.BLL.Services
 
         private void ConfigureUserManager(UserManager<User> userManager)
         {
+            // As I see you initialized validator in AppUserManager. Why do you need to do it here?
             userManager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,

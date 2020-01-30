@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+// What is the reason to put create helpers folder for this class?
 namespace RealEstateAgencyBackend.BLL.Services.Helpers
 {
 	public class FiltrationService
