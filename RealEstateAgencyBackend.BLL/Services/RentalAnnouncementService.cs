@@ -57,9 +57,16 @@ namespace RealEstateAgencyBackend.BLL.Services
             return rentalAnnouncementDto;
         }
 
-        //
+		public RentalAnnouncementReservationDto GetFullInfo(int id)
+		{
+			RentalAnnouncement rentalAnnouncement = _repository.Find(id);
+			RentalAnnouncementReservationDto rentalAnnouncementDto = _mapper.Map<RentalAnnouncement, RentalAnnouncementReservationDto>(rentalAnnouncement);
 
-        public IEnumerable<RentalAnnouncementDto> GetAll()
+			return rentalAnnouncementDto;
+		}
+
+
+		public IEnumerable<RentalAnnouncementDto> GetAll()
         {
             IQueryable<RentalAnnouncement> announcements = _repository.GetAll();
 

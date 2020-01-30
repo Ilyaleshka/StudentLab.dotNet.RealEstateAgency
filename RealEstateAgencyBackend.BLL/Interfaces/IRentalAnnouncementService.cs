@@ -13,7 +13,9 @@ namespace RealEstateAgencyBackend.BLL.Interfaces
 
 		RentalAnnouncementDto Find(int id);
 
-        RentalAnnouncementDto Remove(RentalAnnouncementDto rentalAnnouncement);
+		RentalAnnouncementReservationDto GetFullInfo(int id);
+
+		RentalAnnouncementDto Remove(RentalAnnouncementDto rentalAnnouncement);
 
         RentalAnnouncementDto Update(RentalAnnouncementDto rentalAnnouncement);
 

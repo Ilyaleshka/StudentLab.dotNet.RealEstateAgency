@@ -42,15 +42,15 @@ namespace RealEstateAgencyBackend.Controllers
 
 		[HttpGet]
         [Route("api/announcements/{id:int}")]
-        [ResponseType(typeof(RentalAnnouncementViewModel))]
+        [ResponseType(typeof(RentalAnnouncementReservationViewModel))]
         public IHttpActionResult GetRentalAnnouncement(int id)
         {
-            RentalAnnouncementDto rentalAnnouncement = _rentalAnnouncementService.Find(id);
+            RentalAnnouncementReservationDto rentalAnnouncement = _rentalAnnouncementService.GetFullInfo(id);
 
             if (rentalAnnouncement == null)
                 return NotFound();
 
-            RentalAnnouncementViewModel view = _mapper.Map<RentalAnnouncementViewModel>(rentalAnnouncement);
+            RentalAnnouncementReservationViewModel view = _mapper.Map<RentalAnnouncementReservationViewModel>(rentalAnnouncement);
 
             return Ok(view);
         }
@@ -59,7 +59,7 @@ namespace RealEstateAgencyBackend.Controllers
         [Authorize]
         [HttpPost]
         [Route("api/announcements/create")]
-        [ResponseType(typeof(RentalAnnouncementCreateModel))]
+        [ResponseType(typeof(RentalAnnouncementViewModel))]
         public IHttpActionResult Create(RentalAnnouncementCreateModel rentalAnnouncementCreateModel)
         {
             if (!ModelState.IsValid)
@@ -85,47 +85,10 @@ namespace RealEstateAgencyBackend.Controllers
             rentalAnnouncement.UserId = userId;
             rentalAnnouncement.Images = images;
 
-            _rentalAnnouncementService.Create(rentalAnnouncement);
+			RentalAnnouncementDto createdRentalAnnouncement = _rentalAnnouncementService.Create(rentalAnnouncement);
 
-            return Created("", rentalAnnouncementCreateModel);
+            return Created("", _mapper.Map<RentalAnnouncementViewModel>(createdRentalAnnouncement));
         }
-
-
-        // PUT: api/RentalAnnouncements/5
-        /*[ResponseType(typeof(void))]
-        public IHttpActionResult UpdateRentalAnnouncement(int id, RentalAnnouncement rentalAnnouncement)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != rentalAnnouncement.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(rentalAnnouncement).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RentalAnnouncementExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }*/
-
 
         // DELETE: api/RentalAnnouncements/5
         [Authorize]
