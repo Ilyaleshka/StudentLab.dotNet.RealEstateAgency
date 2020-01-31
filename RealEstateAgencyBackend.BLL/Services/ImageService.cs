@@ -62,9 +62,8 @@ namespace RealEstateAgencyBackend.BLL.Services
             using (MemoryStream ms = new MemoryStream(bytes))
             {
                 Image img = Image.FromStream(ms);
-				String fileName = DateTime.Now.Ticks + ".jpg";// + "." + img.RawFormat.ToString();// + extension;// postedFile.FileName;// + DateTime.Now.Ticks + extension;
+				String fileName = DateTime.Now.Ticks + ".jpg";
 				String filePath = Path.Combine(appFolderPath, folderPath, fileName); 
-				//filePath = Path.Combine(filePath,fileName);// + "." + img.RawFormat.ToString();// + extension;// postedFile.FileName;// + DateTime.Now.Ticks + extension;
 				relativeFilePath = Path.Combine(folderPath, fileName);
 				img.Save(filePath, ImageFormat.Jpeg);
             }
@@ -79,22 +78,29 @@ namespace RealEstateAgencyBackend.BLL.Services
             return imageDto;
         }
 
-
-
-
         public IEnumerable<ImageDto> GetAll()
         {
-            throw new NotImplementedException();
-        }
+			List<ImageDto> ImagesDto = _mapper.Map<IEnumerable<PostImage>, List<ImageDto>>(_repository.GetAll());
+			return ImagesDto;
+
+		}
 
         public ImageDto Remove(ImageDto postImage)
         {
-            throw new NotImplementedException();
-        }
+			var temp = _repository.Remove(postImage.Id);
+			_dal.Save();
 
-        public ImageDto Update(ImageDto postImage)
+			ImageDto ImageDto = _mapper.Map<ImageDto>(temp);
+			return ImageDto;
+		}
+
+        public ImageDto Update(ImageDto image)
         {
-            throw new NotImplementedException();
-        }
+			PostImage postImage = _mapper.Map<PostImage>(image);
+			_repository.Update(postImage);
+			_dal.Save();
+
+			return _mapper.Map<ImageDto>(postImage);
+		}
     }
 }

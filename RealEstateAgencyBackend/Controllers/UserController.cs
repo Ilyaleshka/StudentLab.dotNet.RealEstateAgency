@@ -95,7 +95,7 @@ namespace RealEstateAgencyBackend.Controllers
 
 
 		[HttpPost]
-		[Route("api/profile/reservations/{announcementId:int}/complite")]
+		[Route("api/profile/reservations/{announcementId:int}/complete")]
 		public IHttpActionResult CompliteReservations(Int32 announcementId)
 		{
 			String userName = AuthManager.User.Identity.Name;

@@ -317,17 +317,23 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AnnouncementsController.cs" />
-    <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\RequestsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="IdentityConfig.cs" />
-    <Compile Include="Infrastructure\BLL\AppUserManager.cs" />
-    <Compile Include="Models\AnnouncementViewModels.cs" />
-    <Compile Include="Models\RequestViewModels.cs" />
-    <Compile Include="Models\UserViewModels.cs" />
+    <Compile Include="Models\RentalAnnouncementPageViewModel.cs" />
+    <Compile Include="Models\RentalAnnouncementCreateModel.cs" />
+    <Compile Include="Models\RentalAnnouncementReservationViewModel.cs" />
+    <Compile Include="Models\RentalAnnouncementViewModel.cs" />
+    <Compile Include="Models\RentalRequestCreateViewModel.cs" />
+    <Compile Include="Models\RentalRequestViewModel.cs" />
+    <Compile Include="Models\RentalRequestPageViewModel.cs" />
+    <Compile Include="Models\ReservationViewModel.cs" />
+    <Compile Include="Models\UserCreateModel.cs" />
+    <Compile Include="Models\UserLoginModel.cs" />
+    <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

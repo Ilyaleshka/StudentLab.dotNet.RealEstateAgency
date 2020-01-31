@@ -32,10 +32,10 @@ namespace RealEstateAgencyBackend.Controllers
 
         [HttpGet]
         [Route("api/announcements")]
-        public RentalAnnouncementPageView GetRentalAnnouncements(int page,int pageSize)
+        public RentalAnnouncementPageViewModel GetRentalAnnouncements(int page,int pageSize)
         {
 			RentalAnnouncementPageDto announcements = _rentalAnnouncementService.GetPageWithFilters(page, pageSize, HttpContext.Current.Request.QueryString);
-            RentalAnnouncementPageView results = _mapper.Map<RentalAnnouncementPageView>(announcements);
+            RentalAnnouncementPageViewModel results = _mapper.Map<RentalAnnouncementPageViewModel>(announcements);
             return results;
         }
 

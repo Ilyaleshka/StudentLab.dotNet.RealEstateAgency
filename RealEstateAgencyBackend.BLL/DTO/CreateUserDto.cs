@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RealEstateAgencyBackend.BLL.DTO
 {
-	public class UserDto
+	public class CreateUserDto
     {
         public String UserLastName { get; set; }
 
@@ -14,6 +10,6 @@ namespace RealEstateAgencyBackend.BLL.DTO
 
         public String Email { get; set; }
 
-        public String Id { get; set; }
+        public String Password { get; set; }
     }
 }

@@ -15,9 +15,6 @@ namespace RealEstateAgencyBackend
     {
         public void Configuration(IAppBuilder app)
         {
-            app.CreatePerOwinContext<AppDbContext>(AppDbContext.Create);
-            app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
-
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie

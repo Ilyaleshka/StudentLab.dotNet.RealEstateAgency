@@ -22,7 +22,6 @@ namespace RealEstateAgencyBackend.Controllers
 {
     public class AccountController : ApiController
     {
-        // Please use consisted code style. You should always use 'private' or never use it.
         private IUserService _userService;
         private IMapper _mapper;
 
@@ -60,7 +59,6 @@ namespace RealEstateAgencyBackend.Controllers
                 ident);
             }
 
-            //return Ok(new UserViewModel() {Id = user.Id, Name = user.UserName,LastName = user.UserLastName, Email=user.Email });
             return Ok(_mapper.Map<UserViewModel>(user));
         }
 

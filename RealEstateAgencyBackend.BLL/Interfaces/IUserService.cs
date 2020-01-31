@@ -16,8 +16,9 @@ namespace RealEstateAgencyBackend.BLL.Interfaces
 
         UserDto FindById(string id);
 
+		IEnumerable<UserDto> GetAll();
 
-        bool IsUserExist(string userName);
+		bool IsUserExist(string userName);
 
         string GetUserId(string userName);
 

@@ -1,13 +1,9 @@
-﻿using RealEstateAgencyBackend.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RealEstateAgencyBackend.BLL.DTO
+namespace RealEstateAgencyBackend.Models
 {
-	public class RentalAnnouncementDto
+	public class RentalAnnouncementViewModel
     {
         public int Id { get; set; }
 
@@ -23,8 +19,6 @@ namespace RealEstateAgencyBackend.BLL.DTO
 
         public String Location { get; set; }
 
-        public String UserId { get; set; }
-
-        public  ICollection<ImageDto> Images { get; set; }
-    }
+		public ICollection<String> Images { get; set; }
+	}
 }

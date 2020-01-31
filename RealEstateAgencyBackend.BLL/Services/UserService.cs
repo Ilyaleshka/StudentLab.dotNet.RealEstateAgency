@@ -213,5 +213,11 @@ namespace RealEstateAgencyBackend.BLL.Services
 
             _dal.Save();
         }
-    }
+
+		public IEnumerable<UserDto> GetAll()
+		{
+			List<UserDto> users  = _mapper.Map<IEnumerable<User>, List<UserDto>>(_userManager.Users);
+			return users;
+		}
+	}
 }

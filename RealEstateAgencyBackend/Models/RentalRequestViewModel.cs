@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RealEstateAgencyBackend.BLL.DTO
+namespace RealEstateAgencyBackend.Models
 {
-	public class RentalRequestDto
+	public class RentalRequestViewModel
     {
         public int Id { get; set; }
 
